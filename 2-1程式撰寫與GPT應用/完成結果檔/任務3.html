@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任務三：運用GPT輔助程式設計</title>
+</head>
+
+<body>
+    <script>
+
+
+        //1.BMI(身體質量指數)計算(必須用回圈)
+        let heights = [170, 160, 180]; // 身高值 (單位: 公分)
+        let weights = [65, 50, 75];   // 體重值 (單位: 公斤)
+        let bmis = [];                // 用於存放計算出的BMI值
+
+        // 計算每個人的BMI值並存入陣列
+        for (let i = 0; i < heights.length; i++) {
+            let heightInMeters = heights[i] / 100; // 將身高轉換為公尺
+            let bmi = weights[i] / (heightInMeters * heightInMeters); // 計算BMI
+            bmis.push(bmi);
+        }
+
+        // 找出最小的BMI值
+        let minBmi = Math.min(...bmis);
+        let roundedMinBmi = Math.round(minBmi); // 四捨五入
+
+        // 判斷BMI是否在正常範圍內
+        let isNormal = roundedMinBmi >= 18 && roundedMinBmi <= 25;
+
+        // 顯示結果
+        if (isNormal) {
+            document.write(`最小值為${roundedMinBmi}，BMI正常`);
+        } else {
+            document.write(`最小值為${roundedMinBmi}，BMI不正常`);
+        }
+        document.write("<hr>");
+
+        //2.求最大公因數(必須用回圈)
+        let num1 = 12; // 第一個整數
+        let num2 = 18; // 第二個整數
+        let gcd = 1;   // 最大公因數，初始值為1
+
+        // 使用迴圈計算最大公因數
+        for (let i = 1; i <= Math.min(num1, num2); i++) {
+            if (num1 % i === 0 && num2 % i === 0) {
+                gcd = i; // 更新最大公因數
+            }
+        }
+
+        // 顯示結果
+        document.write(`<br>${num1}及${num2}之最大公因數為${gcd}`);
+
+    </script>
+
+</body>
+
+</html>

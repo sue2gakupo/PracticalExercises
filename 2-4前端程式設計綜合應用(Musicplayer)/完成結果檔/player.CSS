@@ -1,0 +1,262 @@
+:root {
+
+  font-family: 'Courier New ', Courier, monospace;
+
+  --vol-thumb-appearance: none;
+  --vol-thumb-width: 12px;
+  --vol-thumb-height: 16px;
+  --vol-thumb-background-color: #b5724d;
+  --vol-thumb-border-radius: 3px;
+  --vol-thumb-border: 2px solid #4b3d36;
+
+  --progress-appearance: none;
+  --progress-width: 12px;
+  --progress-height: 12px;
+  --progress-background-color: #4b3d36;
+  --progress-border: 1px solid #bfa76a;
+  --progress-border-radius: 0;
+  --progress-transition: 0.3s;
+  --progress-hover-width: 14px;
+  --progress-hover-height: 14px;
+  --progress-hover-background-color: #bfa76a;
+}
+
+body {
+  background-color: #808074;
+  color: #d9c8b4;
+}
+
+
+#musicList {
+  width: 400px;
+  height: 45px;
+  appearance: none;
+  background-color: #f2f2f2;
+  color: #2e2e2e;
+  border: 3px solid #a89373;
+  border-radius: 12px;
+  font-size: 14px;
+
+  padding-left: 10px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  background-image: url('https://cdn-icons-png.flaticon.com/128/563/563541.png');
+  /* 會出現GET http://127.0.0.1:5501/favicon.ico 404 (Not Found)的'提示' ,因為瀏覽器在資料夾找不到檔案
+  不影響功能*/
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 18px 18px;
+}
+
+#musicList:hover {
+  background-color: #e0d4c1;
+}
+
+
+#logoImage {
+  width: 300px;
+  height: 300px;
+  margin: 5px auto;
+  margin-bottom: 30px;
+  display: flex;
+  filter: blur(3px);
+  transition: filter 0.3s;
+}
+
+@keyframes rotateLogo {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#logoImage.playing {
+  animation: rotateLogo 5s linear infinite;
+  filter: blur(0);
+}
+
+#logoImage.playing:hover {
+  animation-play-state: paused;
+}
+
+#logoImage:hover {
+  filter: blur(0);
+}
+
+
+#controlPanel .setMute {
+  text-decoration: line-through;
+  background-color: #3a2f2b;
+}
+
+#controlPanel {
+  border: 4px solid #6a5a4d;
+  background-color: #3b3732;
+  border-radius: 10px;
+  width: 600px;
+  padding: 40px;
+  margin: 10px auto;
+  box-shadow: 0px 0px 20px #1a1a1a;
+  justify-content: center
+}
+
+#controlPanel span {
+  min-width: 10px;
+  background-color: #8d7d71;
+  border-radius: 6px;
+  border-bottom: 4px solid #40362c;
+  text-align: center;
+  box-shadow: 0px 4px 10px #1e1e1e;
+  transition: all 0.2s;
+  padding: 7px 15px;
+  cursor: pointer;
+  color: #f2e9da;
+  font-family: webdings;
+  margin: 10px 2px;
+}
+
+#controlPanel span:hover {
+  box-shadow: 0px 12px 18px -5px #aa8453;
+  transform: scale(1.02);
+}
+
+#controlPanel span:active {
+  box-shadow: 0px 4px 8px #eee6dd;
+  transform: scale(0.96);
+}
+
+#volumeControl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#volumeControl>input[type="text"] {
+  width: 50px;
+  height: 25px;
+  border: 2px solid #917a5a;
+  background-color: #1f1e1c;
+  color: #f2e9da;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 6px
+}
+
+#volumeControl>input[type="range"] {
+  width: 300px;
+  height: 8px;
+  appearance: none;
+  background-color: #4d4439;
+  border: 2px solid #7a6857;
+  border-radius: 6px;
+}
+
+#volumeControl>input[type="range"]::-webkit-slider-thumb {
+  appearance: var(--vol-thumb-appearance);
+  width: var(--vol-thumb-width);
+  height: var(--vol-thumb-height);
+  background-color: var(--vol-thumb-background-color);
+  border-radius: var(--vol-thumb-border-radius);
+  border: var(--vol-thumb-border);
+}
+
+#volumeControl>input[type="range"]::-moz-range-thumb {
+  appearance: var(--vol-thumb-appearance);
+  width: var(--vol-thumb-width);
+  height: var(--vol-thumb-height);
+  background-color: var(--vol-thumb-background-color);
+  border-radius: var(--vol-thumb-border-radius);
+  border: var(--vol-thumb-border);
+}
+
+#volumeControl>button {
+  border-radius: 6px;
+  border: 2px solid #715b47;
+  background-color: #3c3228;
+  color: #e2d2bd;
+  width: 30px;
+  height: 30px;
+  }
+
+#volumeControl>button:hover {
+  background-color: #715b47;
+  color: #ffffff;
+  transform: scale(1.5);
+}
+
+#information>div {
+  height: 40px;
+  color: #1f1e1c;
+  font-size: 1.2rem;
+  text-align: center;
+  line-height: 40px;
+  background-color: #f3e2ce;
+  padding: 0px 10px;
+  margin-top: 15px;
+  border: 1px solid #f8d2aa;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+#progressBar {
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  background-color: #f3efea;
+  margin: 0px 5px;
+  margin-top: 20px;
+  border-radius: 6px;
+}
+
+#progressBar::-webkit-slider-thumb {
+  appearance: var(--progress-appearance);
+  background-color: var(--progress-background-color);
+  width: var(--progress-width);
+  height: var(--progress-height);
+  border-radius: var(--progress-border-radius);
+  border: var(--progress-border);
+
+
+}
+
+#progressBar::-webkit-slider-thumb:hover {
+  width: var(--progress-hover-width);
+  height: var(--progress-hover-height);
+  transition: var(--progress-transition);
+  background-color: var(--progress-hover-background-color);
+}
+
+#progressBar::-moz-range-thumb {
+  appearance: var(--progress-appearance);
+  background-color: var(--progress-background-color);
+  width: var(--progress-width);
+  height: var(--progress-height);
+  border-radius: var(--progress-border-radius);
+  border: var(--progress-border);
+}
+
+#progressBar::-moz-range-thumb:hover {
+  width: var(--progress-hover-width);
+  height: var(--progress-hover-height);
+  transition: var(--progress-transition);
+  background-color: var(--progress-hover-background-color);
+}
+
+
+/* RWD */
+@media (max-width: 600px) {
+  #controlPanel {
+    width: 98%;
+    padding: 10px;
+  }
+
+  #controlPanel span {
+    min-width: 20px;
+    padding: 4px 6px;
+    font-size: 1rem;
+  }
+
+  #musicList {
+    width: 96%;
+  }
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任務二：程式邏輯練習</title>
+</head>
+
+<body>
+    <script>
+
+        //1.九九乘法表  請利用回圈寫一個九九乘法表。
+        for (var i = 1; i <= 9; i++) {
+            for (var j = 1; j <= 9; j++) {
+                document.write(i + "*" + j + "=" + (i * j) + " " + " ");
+            }
+            document.write("<br>");
+        }
+        document.write("<hr>");
+
+
+        //2.等第區分(限定用switch) 
+
+        var score = 60; //宣告一個整數變數
+        switch (true) {
+            case (score >= 90):
+                document.write("優等<br>");
+                break;
+            case (score >= 80 && score < 90):
+                document.write("甲等<br>");
+                break;
+            case (score >= 70 && score < 80):
+                document.write("乙等<br>");
+                break;
+            case (score >= 60 && score < 70):
+                document.write("丙等<br>");
+                break;
+            default:
+                document.write("丁等<br>");
+                break;
+        }
+        document.write("<hr>");
+
+
+        //3.兩數交換
+        var x = 5;
+        var y = 15;
+        x = x + y;
+        y = x - y;
+        x = x - y;
+        document.write("x=" + x + ", y=" + y);
+        document.write("<hr>");
+
+        //4.雞兔同籠
+        //x=雞的數量，y=兔的數量
+        //x+y=35 2x+4y=94
+        //y=35-x 
+        //2x+4(35-x)=94
+        //break:找到解就跳出迴圈
+
+        for (var x = 0; x <= 35; x++) {
+            if (2 * x + 4 * (35 - x) == 94) {
+                document.write("雞的數量:" + x + "隻,兔的數量:" + (35 - x) + "<br>");
+                break;    
+            }
+        }
+        document.write("<hr>");
+
+        //5.費氏數列
+        //1,1,2,3,5,8,13,21,34,55,89      
+        var n=9    //第n項費氏數列的值，假設為9
+        var x=1,y=1;
+        var sum=0;
+
+        for (var i=1;i<=n-2;i++){
+            sum=y+x;
+            x=y;
+            y=sum;
+        }  
+        document.write("第"+n+"項費氏數列的值為:"+sum+"<br>");
+        document.write("<hr>");
+
+    </script>
+
+</body>
+
+</html>

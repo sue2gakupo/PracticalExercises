@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任務一：程式基本敘述句及語法練習</title>
+
+
+</head>
+
+<body>
+
+    <script>
+        //1.宣告變數a為整數，值為42，宣告變數b為浮點數，值2.5，將兩值分別做加、減、乘、除及取餘數之運算，並輸出其結果
+
+        var a = 42;   // 整數
+        var b = 2.5;  // 浮點數
+
+        var addition = a + b;
+        document.write("加法: " + addition);
+        document.write("<br>");
+
+        var subtraction = a - b;
+        document.write("減法: " + subtraction);
+        document.write("<br>");
+
+        var multiplication = a * b;
+        document.write("乘法: " + multiplication);
+        document.write("<br>");
+
+        var division = a / b;
+        document.write("除法: " + division);
+        document.write("<br>");
+
+        var modulus = a % b;
+        document.write("取餘數: " + modulus);
+        document.write("<hr>");
+
+
+        //2.撰寫一個將攝氏溫度轉換為華氏溫度的程式，攝氏溫度的值直接在程式中給定即可(華氏＝攝氏*9/5+32)。
+        var celsius = 20;
+        var fahrenheit = (celsius * 9 / 5) + 32;
+        document.write("攝氏溫度: " + celsius + "℃=華氏溫度: " + fahrenheit + "°F<hr>");
+
+
+        //3.撰寫一個可以列出1~100整數中，不是5的倍數的程式。
+        //使用迴圈
+        document.write("<br>1~100整數中，不是5的倍數的數字:<br>");
+        for (var i = 1; i <= 100; i++) {
+            if (i % 5 !== 0) {
+                document.write(i + " ");
+            }
+        }
+        document.write("<hr>");
+        
+        
+        //4.計算1~1000中除了3倍數外所有數的總合。
+        var sum = 0
+        for (var i = 1; i <= 1000; i++) {
+            if (i % 3 !== 0) {
+                sum += i;
+            }
+        }
+        document.write("<br>1~1000中除了3倍數外所有數的總合: " + sum + "<hr>");
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
