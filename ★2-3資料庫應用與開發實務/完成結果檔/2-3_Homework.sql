@@ -59,10 +59,8 @@ order by ProductID
 --請試寫一合併查詢，查詢出訂購日期落在1996年7月並指定送貨公司為「United Package」的有訂單之訂貨明細資料，
 --並列出訂單號碼、產品類別名稱、產品名稱、產品訂購單價、產品訂購數量、產品價錢小計、客戶編號、客戶名稱、收貨人名字、訂購日期、處理訂單員工的姓名、貨運公司、供應商名稱等資料項目，
 --其中產品價錢小計請以四捨五入計算至整數位。
-
-
 select od.OrderID,c.CategoryName,p.ProductName,od.UnitPrice as 單價,
-od.Quantity as 數量, od.
+od.Quantity as 數量, od.單價*od.數量*(1-od.)
 p.單價 as 訂價,p.單價-od.單價 as 價差,od.數量 as 售出數量,(p.單價-od.單價)*od.數量 as 總折扣金額,s.供應商,s.連絡人,s.連絡人職稱
 ,o.收貨人,o.訂單日期,cu.公司名稱,e.姓名,t.貨運公司名稱
 
@@ -85,6 +83,9 @@ and cu.CustomerID=o.CustomerID
 and su.SupplierID=p.SupplierID
 and e.EmployeeID=o.EmployeeID
 and c.CategoryID=p.CategoryID
+
+--請利用exists運算子配合子查詢式，找出哪些客戶從未下過訂單，並列出客戶的所有欄位。
+--(不可用到in運算，亦不可用合併查詢式) 
 
 
 
