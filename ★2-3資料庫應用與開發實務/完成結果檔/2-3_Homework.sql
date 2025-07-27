@@ -55,39 +55,171 @@ group by ProductID
 having avg(Quantity) > 10
 order by ProductID
 
+-----------------------------------------------------------------------------
 --任務二
 --請試寫一合併查詢，查詢出訂購日期落在1996年7月並指定送貨公司為「United Package」的有訂單之訂貨明細資料，
 --並列出訂單號碼、產品類別名稱、產品名稱、產品訂購單價、產品訂購數量、產品價錢小計、客戶編號、客戶名稱、收貨人名字、訂購日期、處理訂單員工的姓名、貨運公司、供應商名稱等資料項目，
 --其中產品價錢小計請以四捨五入計算至整數位。
-select od.OrderID,c.CategoryName,p.ProductName,od.UnitPrice as 單價,
-od.Quantity as 數量, od.單價*od.數量*(1-od.)
-p.單價 as 訂價,p.單價-od.單價 as 價差,od.數量 as 售出數量,(p.單價-od.單價)*od.數量 as 總折扣金額,s.供應商,s.連絡人,s.連絡人職稱
-,o.收貨人,o.訂單日期,cu.公司名稱,e.姓名,t.貨運公司名稱
 
-from OrderDetails as od 
-inner join Products as p on p.ProductID=od.ProductID
-inner join Categories as c on c.CategoryID=p.CategoryID
-inner join Suppliers as s on s.SupplierID=p.SupplierID
-inner join OrderDetails as o on o.OrderID=od.OrderID
-inner join Customers as cu on cu.CustomerID=o.CustomerID
-inner join Employees as e on e.EmployeeID=o.EmployeeID
-inner join Shippers as t on t.ShipperID=o.ShipVia
-where o.OrderDate between '1996-7-1' and '1996-7-31'
-
-select * 
-from  Categories as c, Customers as cu,  Employees as e, Orders as o, 
-OrderDetails as od, Products as p, Shippers as s,Suppliers as su
-where od.OrderID=o.OrderID
-and p.ProductID=od.ProductID
-and cu.CustomerID=o.CustomerID
-and su.SupplierID=p.SupplierID
-and e.EmployeeID=o.EmployeeID
-and c.CategoryID=p.CategoryID
+select o.OrderID 訂單號碼,c.CategoryID 產品類別,p.ProductName 產品,od.UnitPrice 訂購單價 ,od.Quantity 訂購數量 ,round(od.UnitPrice*(1-od.Discount)*od.Quantity,0) 小計,
+cu.CustomerID 客戶編號,cu.CompanyName 客戶名稱,o.ShipName 收貨人,o.OrderDate 訂購日期,e.FirstName+' '+e.LastName as 處理訂單員工,s.CompanyName 貨運公司,su.CompanyName 供應商
+from Shippers as s 
+inner join (Categories as c 
+inner join (Employees as e 
+inner join(Suppliers as su 
+inner join (Customers as cu 
+inner join (Products as p 
+inner join (OrderDetails as od 
+inner join Orders as o 
+on od.OrderID=o.OrderID) 
+on p.ProductID=od.ProductID) 
+on cu.CustomerID=o.CustomerID)
+on su.SupplierID=p.SupplierID)
+on e.EmployeeID=o.EmployeeID)
+on c.CategoryID=p.CategoryID)
+on s.ShipperID=o.ShipVia
+where o.OrderDate between '1996-7-1' and '1996-7-31' and s.CompanyName='United Package'
 
 --請利用exists運算子配合子查詢式，找出哪些客戶從未下過訂單，並列出客戶的所有欄位。
 --(不可用到in運算，亦不可用合併查詢式) 
 
+select * from Customers as cu 
+where not exists 
+(select * from Orders as o where cu.CustomerID=o.CustomerID)
+
+--請利用in運算子配合子查詢式，查詢哪些員工有處理過訂單，並列出員工的員工編號、姓名、職稱、內部分機號碼、附註欄位。
+--(不可用到exists運算，亦不可用合併查詢式) 
+
+select EmployeeID,FirstName+' '+LastName,Title,Extension,Notes
+from Employees
+where EmployeeID in(select distinct EmployeeID from OrderDetails)
+
+--請合併查詢與子查詢兩種寫法，列出1998年度所有被訂購過的產品資料，並列出產品的所有欄位，且依產品編號由小到大排序。
+--(寫合併查詢時不得用任何子查詢式，寫子查詢時不得用任何合併查詢式)
+
+--合併查詢(inner join)
+select distinct p.*
+from Products as p 
+inner join OrderDetails	as od on p.ProductID=od.ProductID
+inner join Orders as o on od.OrderID=o.OrderID
+where o.OrderDate between '1998-01-01'and '1998-12-31'
+order by p.ProductID
+
+--子查詢(in)
+select * from Products	
+where ProductID in (select ProductID from OrderDetails
+where OrderID in (select OrderID from Orders
+where OrderDate between '1998-01-01'and '1998-12-31'))
+
+-----------------------------------------------------------------------------
+--任務三
+--建立一個名為【MySchool】資料庫的SQL DDL Script
+create database MySchool
+go
+
+--請參考ER圖及下列資料表規格，
+--寫出相對應之SQL DDL Script，使其可於【MySchool】資料庫中建立這些資料表。
+create table[Student](
+StuID nchar(10) not null primary key,
+StuName nvarchar(20) not null,
+Tel nvarchar(20) not null ,
+[Address] nvarchar(100),
+Birthday datetime not null,
+DeptID nchar(1) not null, 
+foreign key(DeptID) references [Department](DeptID))--2
+
+create table[Course](
+CourseID nchar(5) not null primary key,
+CourseName nvarchar(30) not null,
+Credit int not null default(0),
+[Hour] int not null default(2),
+DeptID nchar(1) not null, 
+foreign key(DeptID) references [Department](DeptID))--3
+
+create table[SelectionDetail](
+StuID nchar(10) not null ,
+CourseID nchar(5) not null ,
+[Year] int not null default (Year(Getdate())),
+Term tinyint  not null,
+Score int not null default(0),
+primary key (StuID,CourseID),
+foreign key(StuID) references [Student](StuID),
+foreign key(CourseID) references [Course](CourseID))--4
+
+create table [Department](
+DeptID nchar(1) not null primary key,
+DeptName nvarchar(30) not null unique)--1
+
+-----------------------------------------------------------------------------
+--任務四
+--1.	預存程序內需檢查科系代碼(DeptID)及科系名稱(DeptName)是否已在資料庫中。
+--2.	若欲新增的資料值檢查到已被使用，則輸出對應的錯誤訊息且不進行Insert動作。
+--3.	若欲新增的資料值皆未被使用，則進行Insert動作將資料寫入資料庫。
+
+create proc InsertDeptmentData
+
+	@DeptID nchar(1),@DeptName nvarchar(30)
+as
+begin
+
+	declare @d nchar(1)
+	declare @dn nvarchar(30)
+
+	select @d=DeptID from [Department]  where DeptID=@DeptID
+	select @dn=DeptName from [Department]  where DeptName=@DeptName
 
 
+	if @d is not null
+	begin
+		print '科系代碼[' + @DeptID + '] 已存在，無法新增！' 
+		return
+	end
+
+	if @dn is not null
+	begin
+		print '科系名稱[' + @DeptName + '] 已存在，無法新增！' 
+		return
+	end
+
+	insert into [Department] (DeptID, DeptName)  
+    values  (@DeptID, @DeptName)
+    
+    print '成功新增科系：代碼=' + @DeptID + ', 名稱=' + @DeptName
+
+end
+
+
+-----------------------------------------------------------------------------
+--任務五
+--建立一個名為「getCourseID」的自訂函數
+--新增課程資料時可呼叫此函數自動取得一個新的課程編號
+--CourseID的編碼規則：'C'+ DeptID + 3流水碼
+
+create function getCourseID(@DeptID nchar(1))
+	returns nchar(5)
+as
+begin
+
+	declare @lastID nchar(5), @newID nchar(5)
+
+	select top 1 @lastID=CourseID
+		from [Course]
+		where DeptID = @DeptID
+		order by CourseID desc
+
+	if @lastID is null
+		set @newID='C'+ @DeptID + '001'
+	else
+	begin
+
+		declare @letter nchar(1)=substring(@lastID, 1, 1)
+		declare @num nchar(3)=cast( cast( substring(@lastID, 2, 3) as int )+1 as nchar)
+
+		set @newID='C'+@letter+@num
+	end
+
+	return @newID --看老師影片
+
+end	
 
 
