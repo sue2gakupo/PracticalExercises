@@ -23,7 +23,7 @@ where Quantity between 20 and 40
 
 --統計查詢
 --計算【產品】資料表中類別號為2的產品資料平均單價。
-select avg (UnitPrice) as 平均單價
+select avg (UnitPrice) as average 平均單價
 from Products
 where CategoryID=2
 
@@ -90,7 +90,7 @@ where not exists
 --請利用in運算子配合子查詢式，查詢哪些員工有處理過訂單，並列出員工的員工編號、姓名、職稱、內部分機號碼、附註欄位。
 --(不可用到exists運算，亦不可用合併查詢式) 
 
-select EmployeeID,FirstName+' '+LastName,Title,Extension,Notes
+select EmployeeID,FirstName+' '+LastName as EmployeeName,Title,Extension,Notes
 from Employees
 where EmployeeID in(select distinct EmployeeID from OrderDetails)
 
@@ -117,7 +117,6 @@ where OrderDate between '1998-01-01'and '1998-12-31'))
 create database MySchool
 go
 
---請參考ER圖及下列資料表規格，
 --寫出相對應之SQL DDL Script，使其可於【MySchool】資料庫中建立這些資料表。
 create table[Student](
 StuID nchar(10) not null primary key,
@@ -152,10 +151,6 @@ DeptName nvarchar(30) not null unique)--1
 
 -----------------------------------------------------------------------------
 --任務四
---1.	預存程序內需檢查科系代碼(DeptID)及科系名稱(DeptName)是否已在資料庫中。
---2.	若欲新增的資料值檢查到已被使用，則輸出對應的錯誤訊息且不進行Insert動作。
---3.	若欲新增的資料值皆未被使用，則進行Insert動作將資料寫入資料庫。
-
 create proc InsertDeptmentData
 
 	@DeptID nchar(1),@DeptName nvarchar(30)
@@ -191,9 +186,6 @@ end
 
 -----------------------------------------------------------------------------
 --任務五
---建立一個名為「getCourseID」的自訂函數
---新增課程資料時可呼叫此函數自動取得一個新的課程編號
---CourseID的編碼規則：'C'+ DeptID + 3流水碼
 
 create function getCourseID(@DeptID nchar(1))
 	returns nchar(5)
@@ -208,18 +200,15 @@ begin
 		order by CourseID desc
 
 	if @lastID is null
-		set @newID='C'+ @DeptID + '001'
+		set @newID=N'C'+ @DeptID + N'001'
 	else
 	begin
 
-		declare @letter nchar(1)=substring(@lastID, 1, 1)
-		declare @num nchar(3)=cast( cast( substring(@lastID, 2, 3) as int )+1 as nchar)
+		declare @num nchar(3)=right(N'000'+cast( cast( substring(@lastID, 3,3 ) as int )+1 as nvarchar),3)
 
-		set @newID='C'+@letter+@num
+		set @newID=N'C'+@DeptID+@num
 	end
-
-	return @newID --看老師影片
-
+	return @newID 
 end	
 
 
