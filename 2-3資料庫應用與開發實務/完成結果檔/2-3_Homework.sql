@@ -23,7 +23,7 @@ where Quantity between 20 and 40
 
 --統計查詢
 --計算【產品】資料表中類別號為2的產品資料平均單價。
-select avg (UnitPrice) as average 平均單價
+select avg (UnitPrice) as 平均單價
 from Products
 where CategoryID=2
 
@@ -209,6 +209,42 @@ begin
 		set @newID=N'C'+@DeptID+@num
 	end
 	return @newID 
-end	
+end
+
+--測試
+--insert into [Course] values(dbo.getCourseID('A'),'test9647',2,3,'A')
+
+--後續自行補充實務上最常用的做法 --max排序
+create function getCourseID(@DeptID nchar(1))
+returns nchar(5)
+as
+begin
+declare @maxNum int, @newID nchar(5) 
+select @maxNum  = max(cast(substring(CourseID,3,3)as int))
+from [Course]
+where DeptID=@DeptID
+	and CourseID like N'C'+@DeptID+N'%'  ---- 如果 @DeptID = 'A'，會比對：CA001, CA002, CABC, CA999999 等所有以 'CA' 開頭的字串(模糊查詢)
+	and len(CourseID) =5 --len計算字串長度（不包含尾端空格），確保 CourseID 正好是5個字元
+	and isnumeric(substring(CourseID,3,3))=1 --isnumeric()檢查字串是否為有效數字，
+
+	if @maxNum is null 
+	set @newID=N'C'+@DeptID+N'001'
+	else
+	set @newID=N'C'+@DeptID+format(@maxNum+1,'D3')
+
+	return @newID
+end
+
+
+
+
+
+
+
+
+
+
+
+
 
 
