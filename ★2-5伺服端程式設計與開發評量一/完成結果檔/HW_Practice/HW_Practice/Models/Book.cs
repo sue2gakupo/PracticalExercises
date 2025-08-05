@@ -2,7 +2,7 @@
 
 namespace GuestBooks.Models
 {
-    public partial class Book //建立Metadata之後要在原本Model加入partial關鍵字
+    public partial class Book 
     {
         //1-1.主文資料表(編號(P.K)、主題、發表內容、照片、照片類型、發表人、張貼時間)
 
