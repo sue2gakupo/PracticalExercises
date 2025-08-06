@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GuestBooks.Models
 {
@@ -8,37 +9,37 @@ namespace GuestBooks.Models
     {
         //2-2 使用者發表文章時須填寫主題、發表內容、發表人欄位，而照片可有可無。
         [Key]
-        [Display(Name = "編號")]
-        [StringLength(36)]  //GUID長度為36 (32個16進位的數字+4個dash)
-        [HiddenInput] //隱藏輸入框，因為這個欄位是自動生成的，不需要用戶輸入
-        public string BookID { get; set; } = null!; //使用GUID
+        [Display(Name = "留言編號")]
+        [StringLength(36)]
+        [HiddenInput]
+        public string BookID { get; set; } = null!;
 
-        [Required(ErrorMessage ="主題必填")]
-        [Display(Name = "主題")]
-        [StringLength(40,MinimumLength =3,ErrorMessage ="主題長度需介於3~40個字")]
+        [Display(Name = "發表主題")]
+        [StringLength(40, MinimumLength = 3, ErrorMessage = "主題長度需介於3~40個字")]
+        [Required(ErrorMessage = "發表主題必填")]
         public string Title { get; set; } = null!;
-
-        [Required(ErrorMessage ="發表內容必填")]
+        
         [Display(Name = "發表內容")]
-        [DataType(DataType.MultilineText)] //在view中的HTML裡面會轉換成textarea
+        [DataType(DataType.MultilineText)]
+        [Required(ErrorMessage = "發表內容必填")]
         public string Description { get; set; } = null!;
 
-        [Display(Name ="照片")]
-        [StringLength(40)] //32個16進位數字+4個dash"-"(GUID 總共36個字元) + .jpg(4個字元) = 40個字元
-                           //★但是若需要變更圖片類型要怎麼寫?
-        public string? Photo { get; set; }   //照片可有可無所以加上"?"
+        [Display(Name = "照片")]
+        [StringLength(41)] //36碼GUID+.JPG/.PNG/.JPEG(因為照片副檔名最長為5個字元)
+        public string? Photo { get; set; }
 
-        public string PhotoType { get; set; } = null!;
 
-        [Required(ErrorMessage ="發表人名稱必填")]
         [Display(Name = "發表人名稱")]
-        [StringLength(20,ErrorMessage ="發表人名稱最多20個字")]
+        [StringLength(20, ErrorMessage = "發表人名稱最多20個字")]
+        [Required(ErrorMessage = "發表人名稱必填")]
+
         public string Author { get; set; } = null!;
 
+        [Display(Name = "發布時間")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString ="{0:yyyy/MM/dd hh:mm:ss}")]
+        [HiddenInput]
         public DateTime CreateDate { get; set; } = DateTime.Now;
-
-        //1-3.主文資料表與回覆內容資料表之間具關聯，一則主文可以有很多則回覆內容(所以Rebook關聯型態為List)
-        public virtual List<ReBook>? ReBooks { get; set; }
 
 
     }
@@ -46,19 +47,42 @@ namespace GuestBooks.Models
 
     public class ReBookData
     {
+        [Key]
+        [Display(Name = "回覆編號")]
+        [StringLength(36, MinimumLength = 36)]
+        [HiddenInput]
         public string ReBookID { get; set; } = null!;
 
+        [Required(ErrorMessage = "回覆內容必填")]
+        [Display(Name = "回覆內容")]
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; } = null!;
 
+
+        [Required(ErrorMessage = "回覆人名稱必填")]
+        [Display(Name = "回覆人名稱")]
+        [StringLength(20, ErrorMessage = "回覆人名稱最多20個字")]
         public string Author { get; set; } = null!;
 
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
         //1-3.主文資料表與回覆內容資料表之間具關聯
 
-        public string BookID { get; set; } = null!;  //外鍵，指向主文資料表的BookID
-
-        public Book? Book { get; set; }
+        [ForeignKey("Book")]
+        [HiddenInput]
+        public string BookID { get; set; } = null!;
 
     }
-}
+
+    [ModelMetadataType(typeof(BookData))]
+    public partial class Book
+    { 
+    }
+    [ModelMetadataType(typeof(ReBookData))]
+    public partial class ReBook
+    { 
+    }
+
+
+
+    }
