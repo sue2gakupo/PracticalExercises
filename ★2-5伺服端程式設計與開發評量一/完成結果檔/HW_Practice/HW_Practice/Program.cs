@@ -1,8 +1,16 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using GuestBooks.Models;
 
+var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<GuestBookContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("GuestBookConnection")));
+
+
+
+//////////////////////////////////////////////////
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

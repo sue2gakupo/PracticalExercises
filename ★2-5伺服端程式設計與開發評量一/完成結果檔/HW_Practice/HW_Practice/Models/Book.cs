@@ -14,7 +14,7 @@ namespace GuestBooks.Models
 
         public string? Photo { get; set; }   //照片可有可無所以加上"?"
 
-        public string PhotoType { get; set; } = null!;
+        public string? PhotoType { get; set; } 
 
         public string Author { get; set; } = null!;
 
