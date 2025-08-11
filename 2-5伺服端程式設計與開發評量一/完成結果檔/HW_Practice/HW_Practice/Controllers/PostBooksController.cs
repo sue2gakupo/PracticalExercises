@@ -21,11 +21,13 @@ namespace GuestBooks.Controllers
         // GET: PostBooks
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Book.ToListAsync());
+            var result = await _context.Book.OrderByDescending(b => b.CreateDate).ToListAsync();
+
+            return View(result);
         }
 
         // GET: PostBooks/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Display(string id)
         {
             if (id == null)
             {
@@ -64,7 +66,7 @@ namespace GuestBooks.Controllers
             return View(book);
         }
 
-        
+
         private bool BookExists(string id)
         {
             return _context.Book.Any(e => e.BookID == id);
