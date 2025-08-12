@@ -61,10 +61,10 @@ namespace GuestBooks.Models
                                 new Book
                                 {
                                     BookID = guid[4],
-                                    Title = "永遠支持山楂烏龍統治地球",
+                                    Title = "支持山楂烏龍統治地球",
                                     Description = "茶摩什麼時候才要全通路販售這款山楂烏龍",
                                     Author = "DrinKing",
-                                    Photo = guid[4] + "jpg",
+                                    Photo = guid[4] + ".jpg",
                                     CreateDate = DateTime.Now
                                 }
 

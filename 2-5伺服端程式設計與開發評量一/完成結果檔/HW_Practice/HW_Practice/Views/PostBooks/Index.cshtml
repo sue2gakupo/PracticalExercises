@@ -6,14 +6,38 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<div class="btn btn-outline-light">
+<p>
     <a asp-action="Create">留下評論(❁´◡`❁)</a>
-</div>
+</p>
 
-<div class="row">
+@foreach (var item in Model)
+{
+    <div class="card mb-4 ">
+        <div class="row g-0">
+            <div class="col-md-4">
+                @if (item.Photo != null)
+                {
+                    <img src="~/SeedPhoto/@item.Photo" class="img-fluid rounded-start" style="height:200px;object-fit:cover;">
+                }
+            </div>
+            <div class="col-md-8">
+                <div class="card-body d-flex flex-column" >
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title) </h5>
+                    <p class="card-text"> @Html.Raw(item.Description.Replace("\r\n", "<br>"))</p>
+                    <div class="mt-auto text-end">
+                        <small class="text-body-secondary">
+                            @Html.DisplayFor(modelItem => item.Author)
+                            於 @Html.DisplayFor(modelItem => item.CreateDate)
+                            <a asp-action="Display" asp-route-id="更多..."></a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 
-</div>
 
 
 
@@ -40,29 +64,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Photo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Photo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
+                    <a asp-action="Display" asp-route-id="@item.BookID">Display</a> |
+                    <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -18,7 +18,7 @@ namespace GuestBooks.Controllers
             _context = context;
         }
 
-        // GET: PostBooks
+      
         public async Task<IActionResult> Index()
         {
             var result = await _context.Book.OrderByDescending(b => b.CreateDate).ToListAsync();
@@ -26,7 +26,23 @@ namespace GuestBooks.Controllers
             return View(result);
         }
 
-        // GET: PostBooks/Details/5
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var book = await _context.Book
+                .FirstOrDefaultAsync(m => m.BookID == id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return View(book);
+        }
+
         public async Task<IActionResult> Display(string id)
         {
             if (id == null)
@@ -44,15 +60,13 @@ namespace GuestBooks.Controllers
             return View(book);
         }
 
-        // GET: PostBooks/Create
+       
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: PostBooks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookID,Title,Description,Photo,Author,CreateDate")] Book book)

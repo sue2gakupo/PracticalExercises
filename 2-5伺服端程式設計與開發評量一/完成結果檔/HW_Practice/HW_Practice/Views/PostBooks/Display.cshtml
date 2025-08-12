@@ -1,23 +1,33 @@
 ﻿@model GuestBooks.Models.Book
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Display"; 
 }
 
-<h1>Details</h1>
+<div>
+    <div class="card text-bg-dark">
+        <img src="~/SeedPhoto/ @Model.Photo)" class="card-img" alt="...">
+        <div class="card-img-overlay">
+            <h5 class="card-title">@Html.DisplayNameFor(modelItem => Model.Title)</h5>
+            <p class="card-text">@Html.Raw(Model.Description.Replace("\r\n", "<br>"))</p>
+            <p class="card-text"><small>@Html.DisplayFor(modelItem => Model.CreateDate)</small></p>
+        </div>
+    </div>
+</div>
+
 
 <div>
     <h4>Book</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
@@ -26,7 +36,7 @@
             @Html.DisplayNameFor(model => model.Photo)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Photo)
+           
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Author)
@@ -38,7 +48,7 @@
             @Html.DisplayNameFor(model => model.CreateDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreateDate)
+            
         </dd>
     </dl>
 </div>
