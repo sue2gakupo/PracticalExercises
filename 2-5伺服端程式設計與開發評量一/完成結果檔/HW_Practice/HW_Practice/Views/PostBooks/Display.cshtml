@@ -16,6 +16,11 @@
 </div>
 
 
+<div id="ReBookList">
+    @await Component.InvokeAsync("VCReBooks", new { bookID = Model.BookID })
+</div>
+
+
 <div>
     <h4>Book</h4>
     <hr />
