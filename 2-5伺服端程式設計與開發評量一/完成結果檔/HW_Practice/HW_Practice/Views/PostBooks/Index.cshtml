@@ -25,11 +25,13 @@
                     <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title) </h5>
                     <p class="card-text"> @Html.Raw(item.Description.Replace("\r\n", "<br>"))</p>
                     <div class="mt-auto text-end">
-                        <small class="text-body-secondary">
-                            @Html.DisplayFor(modelItem => item.Author)
-                            於 @Html.DisplayFor(modelItem => item.CreateDate)
-                            <a asp-action="Display" asp-route-id="更多..."></a>
-                        </small>
+                        <p>
+                            <small class="text-body-secondary">
+                                @Html.DisplayFor(modelItem => item.Author)
+                                於 @Html.DisplayFor(modelItem => item.CreateDate)
+                            </small>
+                            <a asp-action="Display" asp-route-id="@item.BookID">查看更多</a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -39,10 +41,7 @@
 
 
 
-
-
-
-<table class="table">
+ <table class="table">
     <thead>
         <tr>
             <th>
@@ -84,10 +83,10 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
-                    <a asp-action="Display" asp-route-id="@item.BookID">Display</a> |
+                    <a asp-action="Details" asp-route-id="@item.BookID">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
-</table>
+</table> 

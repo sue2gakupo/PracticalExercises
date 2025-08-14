@@ -18,7 +18,7 @@ namespace GuestBooks.Controllers
             _context = context;
         }
 
-      
+
         public async Task<IActionResult> Index()
         {
             var result = await _context.Book.OrderByDescending(b => b.CreateDate).ToListAsync();
@@ -60,17 +60,55 @@ namespace GuestBooks.Controllers
             return View(book);
         }
 
-       
+
         public IActionResult Create()
         {
             return View();
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookID,Title,Description,Photo,Author,CreateDate")] Book book)
+        public async Task<IActionResult> Create([Bind("BookID,Title,Description,Photo,Author,CreateDate")] Book book, IFormFile? newPhoto)
         {
+            book.CreateDate = DateTime.Now;
+
+            if (newPhoto != null && newPhoto.Length != 0)
+            {
+
+                if (newPhoto.ContentType != "image/jpeg" && newPhoto.ContentType != "image/png")
+                {
+                    ViewData["ErrorMessage"] = "照片格式錯誤，請上傳JPG或PNG格式的圖片。";
+
+                    return View();
+                }
+
+                string fileName = book.BookID+Path.GetExtension(newPhoto.FileName);
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "BookPhotos", fileName);
+
+                using ( FileStream fs= new FileStream(filePath, FileMode.Create))
+                {
+                    await newPhoto.CopyToAsync(fs);
+                }
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(book);

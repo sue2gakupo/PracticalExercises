@@ -1,19 +1,33 @@
 ﻿@model GuestBooks.Models.Book
 
 @{
-    ViewData["Title"] = "Display"; 
+    ViewData["Title"] = "Display";
 }
 
 <div>
-    <div class="card text-bg-dark">
-        <img src="~/SeedPhoto/ @Model.Photo)" class="card-img" alt="...">
-        <div class="card-img-overlay">
-            <h5 class="card-title">@Html.DisplayNameFor(modelItem => Model.Title)</h5>
-            <p class="card-text">@Html.Raw(Model.Description.Replace("\r\n", "<br>"))</p>
-            <p class="card-text"><small>@Html.DisplayFor(modelItem => Model.CreateDate)</small></p>
+    <h2>@Html.DisplayFor(modelItem => Model.Title)</h2>
+    <div class="card mb-4">
+       
+        @if (Model.Photo != null)
+        {
+            <img src="~/SeedPhoto/@Model.Photo" class="img-fluid img-thumbnail" style="max-width:100%;height:auto;object-fit:contain;" />
+        }
+        <div class="card-body">
+
+
+       
+            <p>	@Html.Raw(Model.Description.Replace("\r\n", "<br>"))</p>
         </div>
+        <div class="card-footer">
+            <p class="text-end">
+                @Html.DisplayFor(modelItem => Model.Author) 於 	@Html.DisplayFor(modelItem => Model.CreateDate)
+            </p>
+        </div>
+
     </div>
 </div>
+<hr />
+
 
 
 <div id="ReBookList">
@@ -21,7 +35,7 @@
 </div>
 
 
-<div>
+@* <div>
     <h4>Book</h4>
     <hr />
     <dl class="row">
@@ -56,7 +70,7 @@
             
         </dd>
     </dl>
-</div>
+</div> *@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.BookID">Edit</a> |
     <a asp-action="Index">Back to List</a>

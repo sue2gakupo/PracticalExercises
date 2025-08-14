@@ -141,13 +141,13 @@ namespace GuestBooks.Models
 
                         //(3)撰寫上傳圖片的程式 //會把 SeedPhoto 資料夾裡的圖片複製到 wwwroot/SeedPhoto，並重新命名為 guid 對應的檔名。
                         string SeedPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "SeedPhoto");
-                        string BookPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "SeedPhoto");
+                        string BookPhotosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "BookPhotos");
 
                         string[] files = Directory.GetFiles(SeedPhotoPath);
 
                         for (int i = 0; i < files.Length; i++)
                         {
-                            string destFile = Path.Combine(BookPhotoPath, guid[i] + ".jpg");
+                            string destFile = Path.Combine(BookPhotosPath, guid[i] + ".jpg");
 
                             File.Copy(files[i], destFile);
                         }
