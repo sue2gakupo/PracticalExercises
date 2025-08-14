@@ -6,72 +6,96 @@
 
 <div>
     <h2>@Html.DisplayFor(modelItem => Model.Title)</h2>
+
     <div class="card mb-4">
-       
-        @if (Model.Photo != null)
-        {
-            <img src="~/SeedPhoto/@Model.Photo" class="img-fluid img-thumbnail" style="max-width:100%;height:auto;object-fit:contain;" />
-        }
         <div class="card-body">
+            <div class="row">
+                <div class="col-6">
 
+                    @if (Model.Photo != null)
+                    {
+                        <img src="~/BookPhotos/@Model.Photo" class="img-fluid img-thumbnail" style="max-width:100%;height:auto;object-fit:contain;" />
+                    }
+                </div>
 
-       
-            <p>	@Html.Raw(Model.Description.Replace("\r\n", "<br>"))</p>
+                <div class="col-6 d-flex flex-column">
+                    <div>
+                        <p>	@Html.Raw(Model.Description.Replace("\r\n", "<br>"))</p>
+                    </div>
+
+                    <div class="mt-auto text-end">
+                            <small class="text-body-secondary">
+                                @Html.DisplayFor(modelItem => Model.Author) 於 	@Html.DisplayFor(modelItem => Model.CreateDate)
+                            </small>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-footer">
-            <p class="text-end">
-                @Html.DisplayFor(modelItem => Model.Author) 於 	@Html.DisplayFor(modelItem => Model.CreateDate)
-            </p>
-        </div>
-
     </div>
 </div>
 <hr />
 
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ReBookFormModal">
+    我要回覆
+</button>
+
+
+<div class="modal fade" id="ReBookFormModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-3">我要回覆</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="ReBookForm" class="bg-light p-2 rounded">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 <div id="ReBookList">
     @await Component.InvokeAsync("VCReBooks", new { bookID = Model.BookID })
 </div>
 
-
-@* <div>
-    <h4>Book</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Photo)
-        </dt>
-        <dd class = "col-sm-10">
-           
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Author)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-        <dd class = "col-sm-10">
-            
-        </dd>
-    </dl>
-</div> *@
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.BookID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary mt-3">回留言列表</a>
 </div>
+
+@section Scripts {
+   
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+
+        $('#ReBookForm').load('/RePostBooks/Create?BookID=@(Model.BookID)',function(){
+            $.validator.unobtrusive.parse($('#ReBookForm'));
+        }); 
+
+
+        function addReBook(){
+
+
+            $.ajax({
+                type:"Post",
+                url:"/RePostBooks/Create",
+                data: $('#ReBookForm form').serialize(),
+                success:function(){
+
+                    console.log('/RePostBooks/GetReBookByViewComponent?BookID=@(Model.BookID)');
+                    $('#ReBookList').load('/RePostBooks/GetReBookByViewComponent?BookID=@(Model.BookID)');
+
+                },
+                error:function(){
+
+                }
+            });
+
+        }
+
+    </script>
+}

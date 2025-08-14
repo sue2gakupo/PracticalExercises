@@ -78,7 +78,7 @@ namespace GuestBooks.Controllers
 
                 if (newPhoto.ContentType != "image/jpeg" && newPhoto.ContentType != "image/png")
                 {
-                    ViewData["ErrorMessage"] = "照片格式錯誤，請上傳JPG或PNG格式的圖片。";
+                    ViewData["ErrMessage"] = "照片格式錯誤，請上傳JPG或PNG格式的圖片。";
 
                     return View();
                 }
@@ -88,26 +88,10 @@ namespace GuestBooks.Controllers
 
                 using ( FileStream fs= new FileStream(filePath, FileMode.Create))
                 {
-                    await newPhoto.CopyToAsync(fs);
+                     newPhoto.CopyTo(fs);
                 }
-
-
-
-
-
-
-
+                book.Photo = fileName;
             }
-
-
-
-
-
-
-
-
-
-
 
             if (ModelState.IsValid)
             {
