@@ -78,7 +78,7 @@ namespace GuestBooks.Controllers
 
                 if (newPhoto.ContentType != "image/jpeg" && newPhoto.ContentType != "image/png")
                 {
-                    ViewData["ErrMessage"] = "照片格式錯誤，請上傳JPG或PNG格式的圖片。";
+                    ViewData["ErrMessage"] = "照片格式錯誤，請上傳JPEG、JPG或PNG格式的圖片。";
 
                     return View();
                 }

@@ -14,7 +14,7 @@
 
                     @if (Model.Photo != null)
                     {
-                        <img src="~/BookPhotos/@Model.Photo" class="img-fluid img-thumbnail" style="max-width:100%;height:auto;object-fit:contain;" />
+                        <img src="~/BookPhotos/@Model.Photo" class="img-fluid img-thumbnail" />
                     }
                 </div>
 
@@ -24,9 +24,9 @@
                     </div>
 
                     <div class="mt-auto text-end">
-                            <small class="text-body-secondary">
-                                @Html.DisplayFor(modelItem => Model.Author) 於 	@Html.DisplayFor(modelItem => Model.CreateDate)
-                            </small>
+                        <small class="text-body-secondary">
+                            @Html.DisplayFor(modelItem => Model.Author) 於 	@Html.DisplayFor(modelItem => Model.CreateDate)
+                        </small>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
 </div>
 
 @section Scripts {
-   
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
@@ -74,11 +74,11 @@
 
         $('#ReBookForm').load('/RePostBooks/Create?BookID=@(Model.BookID)',function(){
             $.validator.unobtrusive.parse($('#ReBookForm'));
-        }); 
+        });
 
 
         function addReBook(){
-
+       
 
             $.ajax({
                 type:"Post",

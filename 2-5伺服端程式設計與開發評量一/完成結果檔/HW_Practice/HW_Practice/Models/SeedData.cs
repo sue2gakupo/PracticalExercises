@@ -4,11 +4,7 @@ namespace GuestBooks.Models
 {
     public class SeedData
     {
-        //1.3.3 撰寫SeedData類別的內容
-        //      (1)撰寫靜態方法 Initialize(IServiceProvider serviceProvider)
-        //      (2)撰寫Book及ReBook資料表內的初始資料程式
-        //      (3)撰寫上傳圖片的程式
-        //      (4)加上 using() 及 判斷資料庫是否有資料的程式
+
 
         public static void Initailize(IServiceProvider serviceProvider)
         {
@@ -139,7 +135,6 @@ namespace GuestBooks.Models
 
                         context.SaveChanges();
 
-                        //(3)撰寫上傳圖片的程式 //會把 SeedPhoto 資料夾裡的圖片複製到 wwwroot/SeedPhoto，並重新命名為 guid 對應的檔名。
                         string SeedPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "SeedPhoto");
                         string BookPhotosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "BookPhotos");
 
