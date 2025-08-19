@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AirQualityAPI.Models
+namespace HW_2_Practice.Models
 {
     /// <summary>
     /// 空氣品質資料模型 - 對應第三方API回傳的JSON結構
@@ -18,6 +18,7 @@ namespace AirQualityAPI.Models
         public string? AqiString { get; set; }   // AQI 字串值
 
         // 計算屬性：將字串轉換為數值，方便後續處理
+        [JsonIgnore]
         public int Aqi => int.TryParse(AqiString, out var result) ? result : 0;
 
         [JsonPropertyName("pollutant")]
@@ -33,7 +34,7 @@ namespace AirQualityAPI.Models
         [JsonPropertyName("co")]
         public string? CO { get; set; }
 
-        [JsonPropertyName("pm25")]
+        [JsonPropertyName("pm2.5")]
         public string? PM25 { get; set; }
 
         [JsonPropertyName("publishtime")]
@@ -44,5 +45,8 @@ namespace AirQualityAPI.Models
 
         [JsonPropertyName("latitude")]
         public string? Latitude { get; set; }     // 緯度
+
+        [JsonPropertyName("siteid")]
+        public string? SiteId { get; set; } 
     }
 }

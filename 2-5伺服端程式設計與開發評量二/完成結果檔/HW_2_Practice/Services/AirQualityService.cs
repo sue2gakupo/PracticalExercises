@@ -1,9 +1,8 @@
-﻿using AirQualityAPI.Models;
-using HW_2_Practice.Models;
+﻿using HW_2_Practice.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace AirQualityAPI.Services
+namespace HW_2_Practice.Services
 {
     /// <summary>
     /// 空氣品質服務實作 - 包含所有商業邏輯
@@ -14,7 +13,7 @@ namespace AirQualityAPI.Services
         private readonly ILogger<AirQualityService> _logger;
 
         // 第三方 API 網址 - 台灣環保署空氣品質資料
-        private const string API_URL = "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=9be7b239-557b-4c10-9775-78cadfc555e9&limit=1000&sort=ImportDate%20desc&format=json";
+        private const string API_URL = "https://data.moenv.gov.tw/api/v2/aqx_p_432?api_key=9e565f9a-84dd-4e79-9097-d403cae1ea75&limit=1000&sort=ImportDate%20desc&format=JSON";
 
         /// <summary>
         /// 建構函式 - 透過依賴注入取得所需服務
@@ -123,6 +122,10 @@ namespace AirQualityAPI.Services
                 return new AirQualitySummary { LastUpdateTime = DateTime.Now };
             }
 
+            // 計算最大與最小 AQI
+            var maxAqi = validData.Max(x => x.Aqi);
+            var minAqi = validData.Min(x => x.Aqi);
+
             var summary = new AirQualitySummary
             {
                 TotalStations = validData.Count,
@@ -145,8 +148,9 @@ namespace AirQualityAPI.Services
                 MinAqi = validData.Min(x => x.Aqi),
 
                 // 極值查詢
-                WorstStation = validData.OrderByDescending(x => x.Aqi).First().SiteName,
-                BestStation = validData.OrderBy(x => x.Aqi).First().SiteName,
+                // 找出所有 AQI 等於最大/最小的站名
+                WorstStation = string.Join(", ", validData.Where(x => x.Aqi == maxAqi).Select(x => x.SiteName)),
+                BestStation = string.Join(", ", validData.Where(x => x.Aqi == minAqi).Select(x => x.SiteName)),
                 LastUpdateTime = DateTime.Now
             };
 

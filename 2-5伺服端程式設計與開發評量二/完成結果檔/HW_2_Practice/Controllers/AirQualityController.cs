@@ -1,6 +1,5 @@
-﻿using AirQualityAPI.Models;
-using AirQualityAPI.Services;
-using HW_2_Practice.Models;
+﻿using HW_2_Practice.Models;
+using HW_2_Practice.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirQualityAPI.Controllers
@@ -10,7 +9,7 @@ namespace AirQualityAPI.Controllers
     /// 職責：處理 HTTP 請求，協調服務層，回應結果
     /// </summary>
     [ApiController]                    // 標記為 API 控制器
-    [Route("api/[controller]")]        // 路由模板：api/airquality
+    [Route("api[controller]")]        // 路由模板：api/airquality
     public class AirQualityController : ControllerBase
     {
         private readonly IAirQualityService _airQualityService;
@@ -100,11 +99,11 @@ namespace AirQualityAPI.Controllers
             try
             {
                 var data = await _airQualityService.GetAirQualityBySiteAsync(siteName);
-                if (data == null)
+                if (data == null) // 使用 '==' 進行 null 檢查
                 {
                     return NotFound($"找不到監測站 '{siteName}' 的資料");
                 }
-                return Ok(data);
+                return Ok(data); // 直接回傳 data，無需轉型
             }
             catch (Exception ex)
             {
@@ -123,7 +122,9 @@ namespace AirQualityAPI.Controllers
             try
             {
                 var summary = await _airQualityService.GetAirQualitySummaryAsync();
+
                 return Ok(summary);
+
             }
             catch (Exception ex)
             {

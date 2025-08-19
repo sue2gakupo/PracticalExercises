@@ -1,4 +1,4 @@
-using AirQualityAPI.Services;
+using HW_2_Practice.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,15 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 // 註冊 Swagger 服務並設定
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-        Title = "Air Quality API",
-        Version = "v1",
-        Description = "台灣空氣品質監測資料 API"
-    });
-});
+builder.Services.AddSwaggerGen();
 
 // 註冊 HttpClient (用於呼叫第三方 API)
 builder.Services.AddHttpClient();
@@ -36,11 +28,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();           // 啟用 Swagger JSON 端點
-    app.UseSwaggerUI(c =>       // 啟用 Swagger UI
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Air Quality API V1");
-        c.RoutePrefix = string.Empty; // Swagger UI 在根路徑顯示
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();  // 強制 HTTPS 重新導向

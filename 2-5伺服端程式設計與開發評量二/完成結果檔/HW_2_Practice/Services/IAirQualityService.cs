@@ -1,6 +1,6 @@
 ﻿using HW_2_Practice.Models;
 
-namespace AirQualityAPI.Services
+namespace HW_2_Practice.Services
 {
     /// <summary>
     /// 空氣品質服務介面 - 定義所有業務邏輯方法的契約
