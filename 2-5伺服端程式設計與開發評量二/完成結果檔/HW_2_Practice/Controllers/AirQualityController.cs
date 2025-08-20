@@ -4,29 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AirQualityAPI.Controllers
 {
-    /// <summary>
-    /// 空氣品質 API 控制器
-    /// 職責：處理 HTTP 請求，協調服務層，回應結果
-    /// </summary>
-    [ApiController]                    // 標記為 API 控制器
-    [Route("api[controller]")]        // 路由模板：api/airquality
+  
+    // 空氣品質 API 控制器
+    // 處理 HTTP 請求，協調服務層，回應結果
+    [ApiController]                   
+    [Route("api[controller]")]       
     public class AirQualityController : ControllerBase
     {
         private readonly IAirQualityService _airQualityService;
-
-        /// <summary>
-        /// 建構函式 - 依賴注入服務
-        /// </summary>
+       
         public AirQualityController(IAirQualityService airQualityService)
         {
             _airQualityService = airQualityService;
         }
 
-        /// <summary>
-        /// API 端點 1：取得所有空氣品質監測資料
-        /// HTTP Method: GET
-        /// Route: GET api/airquality/all
-        /// </summary>
+   
+
+        // API 端點 1：取得所有空氣品質監測資料
+        // Route: GET apiAirQuality/all
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<AirQualityData>>> GetAllAirQualityData()
         {
@@ -41,12 +36,10 @@ namespace AirQualityAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// API 端點 2：根據縣市名稱查詢空氣品質資料
-        /// HTTP Method: GET
-        /// Route: GET api/airquality/by-county/{county}
-        /// 路徑參數：county (縣市名稱)
-        /// </summary>
+        // API 端點 2：根據縣市名稱查詢空氣品質資料
+        // Route: GET apiAirQuality/by-county/{county}
+        // 路徑參數：county (縣市名稱)
+
         [HttpGet("by-county/{county}")]
         public async Task<ActionResult<IEnumerable<AirQualityData>>> GetAirQualityByCounty(string county)
         {
@@ -65,20 +58,25 @@ namespace AirQualityAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// API 端點 3：根據 AQI 等級篩選空氣品質資料
-        /// HTTP Method: GET
-        /// Route: GET api/airquality/by-aqi-range?minAqi=0&maxAqi=100
-        /// 查詢參數：minAqi, maxAqi
-        /// </summary>
+       
+        // API 端點 3：根據 AQI 篩選空氣品質資料
+        // Route: GET apiAirQuality/by-aqi-range?minAqi=0&maxAqi=100
+        // 查詢參數：minAqi, maxAqi
         [HttpGet("by-aqi-range")]
         public async Task<ActionResult<IEnumerable<AirQualityData>>> GetAirQualityByAqiRange(
-            [FromQuery] int minAqi = 0,      // 預設最小值
-            [FromQuery] int maxAqi = 500)    // 預設最大值
+             int minAqi = 0,      // 預設最小值
+             int maxAqi = 300)    // 預設最大值
         {
             try
             {
                 var data = await _airQualityService.GetAirQualityByAqiRangeAsync(minAqi, maxAqi);
+                // 檢查回傳的資料是否為空
+                if (!data.Any())
+                {
+                    // 如果沒有找到任何資料，回傳 404 Not Found
+                    return NotFound("找不到符合條件的空氣品質資料。");
+                }
+
                 return Ok(data);
             }
             catch (Exception ex)
@@ -87,12 +85,10 @@ namespace AirQualityAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// API 端點 4：根據站點名稱查詢特定監測站資料
-        /// HTTP Method: GET
-        /// Route: GET api/airquality/by-site/{siteName}
-        /// 路徑參數：siteName (監測站名稱)
-        /// </summary>
+  
+        // API 端點 4：根據站點名稱查詢特定監測站資料
+        // Route: GET apiAirQuality/by-site/{siteName}
+        // 路徑參數：siteName (監測站名稱)
         [HttpGet("by-site/{siteName}")]
         public async Task<ActionResult<AirQualityData>> GetAirQualityBySite(string siteName)
         {
@@ -111,11 +107,9 @@ namespace AirQualityAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// API 端點 5：取得空氣品質統計摘要
-        /// HTTP Method: GET
-        /// Route: GET api/airquality/summary
-        /// </summary>
+  
+        // API 端點 5：取得空氣品質統計摘要
+        // Route: GET apiAirQuality/summary
         [HttpGet("summary")]
         public async Task<ActionResult<AirQualitySummary>> GetAirQualitySummary()
         {
