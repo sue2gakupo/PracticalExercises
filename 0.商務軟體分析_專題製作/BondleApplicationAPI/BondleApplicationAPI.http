@@ -1,0 +1,6 @@
+@BondleApplicationAPI_HostAddress = http://localhost:5062
+
+GET {{BondleApplicationAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

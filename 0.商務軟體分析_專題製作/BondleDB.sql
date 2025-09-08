@@ -355,9 +355,7 @@ CREATE TABLE OrderDetail (
     CONSTRAINT PK_OrderDetail PRIMARY KEY (OrderID, ProductID, VariationID),
     CONSTRAINT FK_OrderDetail_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID),
     CONSTRAINT FK_OrderDetail_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
-    CONSTRAINT FK_OrderDetail_Variation FOREIGN KEY (VariationID) REFERENCES ProductVariations(VariationID),
-   
-
+    CONSTRAINT FK_OrderDetail_Variation FOREIGN KEY (VariationID) REFERENCES ProductVariations(VariationID),  
 );
 
 INSERT INTO OrderDetail (OrderID, ProductName, VariationName, Price, Quantity, SubTotal, ProductType, ShippingFee, PaymentMethod, ProductID, VariationID)
@@ -408,3 +406,14 @@ VALUES
 ('DD000001', 1, 5, DATEADD(day, 30, GETDATE()), 'O202509030002');
 
 
+--建立預存程序
+alter proc getCreatorWithMember
+@memID nchar(36)
+as
+begin
+	select Creator.* ,Creator.MemberID from Member
+	inner join Creator on Member.MemberID=Creator.MemberID	
+	where Member.MemberID=@memID
+end
+--測試
+exec getCreatorWithMember '50d1b32d-20d0-48e0-a4f6-7b61c944f2e8'

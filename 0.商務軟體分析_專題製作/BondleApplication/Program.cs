@@ -1,8 +1,16 @@
+using BondleApplication.Access.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<BondleDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BondleDBConnection")));
+
+builder.Services.AddDbContext<BondleDBContext2>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BondleDBConnection")));
 
 
 ////////////////////////////////////////////////////////////////
