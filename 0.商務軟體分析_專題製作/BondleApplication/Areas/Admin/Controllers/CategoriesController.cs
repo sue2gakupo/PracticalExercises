@@ -8,8 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using BondleApplication.Access.Data;
 using BondleApplication.Models;
 
-namespace BondleApplication.Controllers
+namespace BondleApplication.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Route("Cate/[controller]/[action]")]
+
     public class CategoriesController : Controller
     {
         private readonly BondleDBContext2 _context;

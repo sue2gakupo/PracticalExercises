@@ -21,4 +21,11 @@
     <ProjectReference Include="..\BondleApplication.Access\BondleApplication.Access.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Creator\Controllers\" />
+    <Folder Include="Areas\Creator\Views\" />
+    <Folder Include="Areas\Supporter\Controllers\" />
+    <Folder Include="Areas\Supporter\Views\" />
+  </ItemGroup>
+
 </Project>
