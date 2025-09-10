@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BondleApplication.Access.Data;
+﻿using BondleApplication.Access.Data;
 using BondleApplication.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+
 
 namespace BondleApplication.Areas.Shared.Controllers
 {
@@ -20,139 +19,119 @@ namespace BondleApplication.Areas.Shared.Controllers
             _context = context;
         }
 
-        // GET: Shared/Login
         public async Task<IActionResult> Index()
-        {
-            return View(await _context.Member.ToListAsync());
-        }
-
-        // GET: Shared/Login/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var member = await _context.Member
-                .FirstOrDefaultAsync(m => m.MemberID == id);
-            if (member == null)
-            {
-                return NotFound();
-            }
-
-            return View(member);
-        }
-
-        // GET: Shared/Login/Create
-        public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Shared/Login/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        public async Task<IActionResult> Login()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MemberID,Email,PasswordHash,GoogleUserID,Name,IsEmailVerified,CreateDate,LastLoginDate,Status")] Member member)
+        public async Task<IActionResult> Login(Member member)
         {
-            if (ModelState.IsValid)
+
+            if (member == null || string.IsNullOrEmpty(member.Email) || string.IsNullOrEmpty(member.PasswordHash))
             {
-                _context.Add(member);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewData["Error"] = "請輸入帳號和密碼";
+                return View(member);
             }
-            return View(member);
+
+            // 查詢會員
+            var user = await _context.Member
+                .FirstOrDefaultAsync(u => u.Email == member.Email && u.PasswordHash == ComputeSha256Hash(member.PasswordHash));
+
+            if (user == null)
+            {
+                ViewData["Error"] = "帳號或密碼錯誤，請重新輸入";
+                return View(member);
+            }
+
+            // 判斷身分
+            bool isCreator = await _context.Creator.AnyAsync(c => c.MemberID == user.MemberID);
+            bool isSupporter = await _context.Supporter.AnyAsync(s => s.MemberID == user.MemberID);
+
+            if (!isCreator && !isSupporter)
+            {
+                ViewData["Error"] = "無效身分";
+                return View(member);
+            }
+
+
+            // 建立 Claims
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.MemberID),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            if (isCreator && !isSupporter)
+                claims.Add(new Claim(ClaimTypes.Role, "Creator"));
+            else if (!isCreator && isSupporter)
+                claims.Add(new Claim(ClaimTypes.Role, "Supporter"));
+            else if (isCreator && isSupporter)
+                claims.Add(new Claim("DualRole", "true")); // 雙重身分
+
+
+
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // 導向不同頁面
+            if (isCreator && !isSupporter)
+                return RedirectToAction("Index", "Dashboard", new { area = "Creator" });
+            else if (!isCreator && isSupporter)
+                return RedirectToAction("Index", "Products", new { area = "Supporter" });
+            else
+                return RedirectToAction("SelectRole"); // 雙重身分選擇
+
         }
 
-        // GET: Shared/Login/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        [HttpGet]
+        public IActionResult SelectRole()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var member = await _context.Member.FindAsync(id);
-            if (member == null)
-            {
-                return NotFound();
-            }
-            return View(member);
+            return View(); // 提供選擇 Creator 或 Supporter 的按鈕
         }
 
-        // POST: Shared/Login/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MemberID,Email,PasswordHash,GoogleUserID,Name,IsEmailVerified,CreateDate,LastLoginDate,Status")] Member member)
+        public IActionResult SelectRole(string role)
         {
-            if (id != member.MemberID)
-            {
-                return NotFound();
-            }
+            var memberID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(memberID)) return RedirectToAction("Index");
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(member);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MemberExists(member.MemberID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(member);
+            if (role == "Creator")
+                return RedirectToAction("Index", "Dashboard", new { area = "Creator" });
+            else if (role == "Supporter")
+                return RedirectToAction("Index", "Products", new { area = "Supporter" });
+
+            return RedirectToAction("Index");
         }
 
-        // GET: Shared/Login/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        [HttpGet]
+        public async Task<IActionResult> Logout()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var member = await _context.Member
-                .FirstOrDefaultAsync(m => m.MemberID == id);
-            if (member == null)
-            {
-                return NotFound();
-            }
-
-            return View(member);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index","Login");
         }
 
-        // POST: Shared/Login/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        private string ComputeSha256Hash(string rawData)
         {
-            var member = await _context.Member.FindAsync(id);
-            if (member != null)
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
             {
-                _context.Member.Remove(member);
+                var bytes = System.Text.Encoding.UTF8.GetBytes(rawData);
+                var hashBytes = sha256.ComputeHash(bytes);
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
-        private bool MemberExists(string id)
-        {
-            return _context.Member.Any(e => e.MemberID == id);
-        }
+
     }
 }

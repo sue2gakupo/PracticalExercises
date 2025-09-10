@@ -8,72 +8,69 @@ using Microsoft.EntityFrameworkCore;
 using BondleApplication.Access.Data;
 using BondleApplication.Models;
 
-namespace BondleApplication.Areas.Admin.Controllers
+namespace BondleApplication.Areas.Creator.Controllers
 {
-    [Area("Admin")]
-     
-
-    public class CategoriesController : Controller
+    [Area("Creator")]
+    public class ProductSeriesController : Controller
     {
         private readonly BondleDBContext2 _context;
 
-        public CategoriesController(BondleDBContext2 context)
+        public ProductSeriesController(BondleDBContext2 context)
         {
             _context = context;
         }
 
-   
-        // GET: Categories
+        // GET: Creator/ProductSeries
         public async Task<IActionResult> Index()
         {
-            var bondleDBContext2 = _context.Category.Include(c => c.ParentCategory);
+            var bondleDBContext2 = _context.ProductSeries.Include(p => p.Creator);
             return View(await bondleDBContext2.ToListAsync());
         }
 
-        // GET: Categories/Details/5
-        public async Task<IActionResult> Details(string id,string CAName)
+        // GET: Creator/ProductSeries/Details/5
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var category = await _context.Category
-                .Include(c => c.ParentCategory)
-                .FirstOrDefaultAsync(m => m.CategoryID == id);
-            if (category == null)
+            var productSeries = await _context.ProductSeries
+                .Include(p => p.Creator)
+                .FirstOrDefaultAsync(m => m.SeriesID == id);
+            if (productSeries == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(productSeries);
         }
 
-        // GET: Categories/Create
+        // GET: Creator/ProductSeries/Create
         public IActionResult Create()
         {
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID");
+            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID");
             return View();
         }
 
-        // POST: Categories/Create
+        // POST: Creator/ProductSeries/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,Description,ParentCategoryID,IconUrl,SortOrder,IsActive")] Category category)
+        public async Task<IActionResult> Create([Bind("SeriesID,SeriesName,Description,CoverImageUrl,Tags,SortOrder,IsPublic,CreateDate,UpdateDate,CreatorID")] ProductSeries productSeries)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(category);
+                _context.Add(productSeries);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", category.ParentCategoryID);
-            return View(category);
+            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID", productSeries.CreatorID);
+            return View(productSeries);
         }
 
-        // GET: Categories/Edit/5
+        // GET: Creator/ProductSeries/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -81,23 +78,23 @@ namespace BondleApplication.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category.FindAsync(id);
-            if (category == null)
+            var productSeries = await _context.ProductSeries.FindAsync(id);
+            if (productSeries == null)
             {
                 return NotFound();
             }
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", category.ParentCategoryID);
-            return View(category);
+            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID", productSeries.CreatorID);
+            return View(productSeries);
         }
 
-        // POST: Categories/Edit/5
+        // POST: Creator/ProductSeries/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("CategoryID,CategoryName,Description,ParentCategoryID,IconUrl,SortOrder,IsActive")] Category category)
+        public async Task<IActionResult> Edit(string id, [Bind("SeriesID,SeriesName,Description,CoverImageUrl,Tags,SortOrder,IsPublic,CreateDate,UpdateDate,CreatorID")] ProductSeries productSeries)
         {
-            if (id != category.CategoryID)
+            if (id != productSeries.SeriesID)
             {
                 return NotFound();
             }
@@ -106,12 +103,12 @@ namespace BondleApplication.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Update(productSeries);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.CategoryID))
+                    if (!ProductSeriesExists(productSeries.SeriesID))
                     {
                         return NotFound();
                     }
@@ -122,11 +119,11 @@ namespace BondleApplication.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", category.ParentCategoryID);
-            return View(category);
+            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID", productSeries.CreatorID);
+            return View(productSeries);
         }
 
-        // GET: Categories/Delete/5
+        // GET: Creator/ProductSeries/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -134,35 +131,35 @@ namespace BondleApplication.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category
-                .Include(c => c.ParentCategory)
-                .FirstOrDefaultAsync(m => m.CategoryID == id);
-            if (category == null)
+            var productSeries = await _context.ProductSeries
+                .Include(p => p.Creator)
+                .FirstOrDefaultAsync(m => m.SeriesID == id);
+            if (productSeries == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(productSeries);
         }
 
-        // POST: Categories/Delete/5
+        // POST: Creator/ProductSeries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var category = await _context.Category.FindAsync(id);
-            if (category != null)
+            var productSeries = await _context.ProductSeries.FindAsync(id);
+            if (productSeries != null)
             {
-                _context.Category.Remove(category);
+                _context.ProductSeries.Remove(productSeries);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(string id)
+        private bool ProductSeriesExists(string id)
         {
-            return _context.Category.Any(e => e.CategoryID == id);
+            return _context.ProductSeries.Any(e => e.SeriesID == id);
         }
     }
 }
