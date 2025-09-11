@@ -417,3 +417,9 @@ begin
 end
 --ด๚ธี
 exec getCreatorWithMember '50d1b32d-20d0-48e0-a4f6-7b61c944f2e8'
+
+---
+SELECT p.ProductName, pi.ImageUrl 
+FROM Product p
+INNER JOIN ProductVariations pv on p.ProductID=pv.ProductID
+INNER JOIN ProductImages pi on pv.VariationID=pi.VariationID

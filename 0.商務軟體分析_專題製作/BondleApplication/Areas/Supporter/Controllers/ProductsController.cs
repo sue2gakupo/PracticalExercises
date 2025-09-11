@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BondleApplication.Access.Data;
+using BondleApplication.Models;
+using BondleApplication.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BondleApplication.Access.Data;
-using BondleApplication.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BondleApplication.Areas.Supporter.Controllers
 {
@@ -20,16 +22,73 @@ namespace BondleApplication.Areas.Supporter.Controllers
             _context = context;
         }
 
-        // GET: Supporter/Products
+  
         public async Task<IActionResult> Index()
         {
-            var bondleDBContext2 = _context.Product.Include(p => p.Category).Include(p => p.Creator).Include(p => p.Series);
-            return View(await bondleDBContext2.ToListAsync());
+            try
+            {
+                // 先查商品及其款式與圖片
+                var products = await _context.Product
+                    .Where(p => p.Status == 1) // 只顯示上架中的商品
+                    .Include(p => p.ProductVariations)
+                    .ThenInclude(pv => pv.ProductImages)
+                    .ToListAsync();
+
+                // 轉成 ViewModel
+                var productViewModels = products.Select(p =>
+                {
+                    // 選擇預設款式，如果沒有就選第一個有效款式
+                    var productVariation = p.ProductVariations
+                        .Where(pv => pv.IsActive && pv.IsDefault)
+                        .FirstOrDefault() ?? p.ProductVariations
+                        .Where(pv => pv.IsActive)
+                        .FirstOrDefault();
+
+                    if (productVariation == null)
+                        return null; // 沒有有效款式就跳過
+
+                    // 取款式的第一張圖片（依 SortOrder 排序）
+                    var productImage = productVariation.ProductImages?
+                        .OrderBy(pi => pi.SortOrder)
+                        .FirstOrDefault();
+
+                    return new ProductViewModel
+                    {
+                        ProductID = p.ProductID,
+                        ProductName = p.ProductName,
+                        Price = p.Price,
+                        PurchaseCount = p.PurchaseCount,
+                        VariationID = productVariation.VariationID,
+                        VariationName = productVariation.VariationName,
+                        Stock = productVariation.Stock,
+                        ImageID = productImage?.ImageID ?? "",
+                        ImageUrl = productImage?.ImageUrl ?? "/NoImage/no_image.png",
+                        SortOrder = productImage?.SortOrder ?? 0
+                    };
+                })
+                .Where(vm => vm != null) // 過濾掉沒有有效款式的商品
+                .ToList();
+
+                return View(productViewModels);
+            }
+            catch (Exception ex)
+            {
+                // 記錄錯誤 (可取消註解並加入 Logger)
+                // _logger.LogError(ex, "Error occurred while fetching products");
+
+                // 返回空列表
+                return View(new List<ProductViewModel>());
+            }
         }
 
-        // GET: Supporter/Products/Details/5
-        public async Task<IActionResult> Details(string id)
+
+// GET: Supporter/Products/Details/5
+public async Task<IActionResult> Details(string id)
         {
+
+
+
+
             if (id == null)
             {
                 return NotFound();
@@ -48,126 +107,7 @@ namespace BondleApplication.Areas.Supporter.Controllers
             return View(product);
         }
 
-        // GET: Supporter/Products/Create
-        public IActionResult Create()
-        {
-            ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID");
-            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID");
-            ViewData["SeriesID"] = new SelectList(_context.ProductSeries, "SeriesID", "SeriesID");
-            return View();
-        }
-
-        // POST: Supporter/Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductID,ProductName,Description,ProductType,CategoryID,SeriesID,Price,Status,LaunchDate,OfflineDate,SortOrder,PurchaseCount,CreateDate,UpdateDate,CreatorID")] Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", product.CategoryID);
-            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID", product.CreatorID);
-            ViewData["SeriesID"] = new SelectList(_context.ProductSeries, "SeriesID", "SeriesID", product.SeriesID);
-            return View(product);
-        }
-
-        // GET: Supporter/Products/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", product.CategoryID);
-            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID", product.CreatorID);
-            ViewData["SeriesID"] = new SelectList(_context.ProductSeries, "SeriesID", "SeriesID", product.SeriesID);
-            return View(product);
-        }
-
-        // POST: Supporter/Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ProductID,ProductName,Description,ProductType,CategoryID,SeriesID,Price,Status,LaunchDate,OfflineDate,SortOrder,PurchaseCount,CreateDate,UpdateDate,CreatorID")] Product product)
-        {
-            if (id != product.ProductID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.ProductID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", product.CategoryID);
-            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID", product.CreatorID);
-            ViewData["SeriesID"] = new SelectList(_context.ProductSeries, "SeriesID", "SeriesID", product.SeriesID);
-            return View(product);
-        }
-
-        // GET: Supporter/Products/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Product
-                .Include(p => p.Category)
-                .Include(p => p.Creator)
-                .Include(p => p.Series)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-
-        // POST: Supporter/Products/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var product = await _context.Product.FindAsync(id);
-            if (product != null)
-            {
-                _context.Product.Remove(product);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+      
 
         private bool ProductExists(string id)
         {

@@ -1,14 +1,43 @@
-﻿@model IEnumerable<BondleApplication.Models.Product>
+﻿@model IEnumerable<BondleApplication.Models.ViewModel.ProductViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "商品總覽";
 }
 
-<h1>Index</h1>
+<h1> @ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+@foreach (var item in Model)
+{
+        <div class="col-xl-4 col-md-6">
+            <div class="card" >
+                <img src="@item.ImageUrl" class="card-img-top" alt="@item.ProductName">
+                <div class="card-body">
+                    <h5 class="card-title"> @Html.DisplayFor(modelItem => item.ProductName)</h5>
+                    <p class="card-text">$@Html.DisplayFor(modelItem => item.Price)</p>
+                    <a href="#" class="btn btn-primary">加入收藏</a>
+                </div>
+            </div>
+        </div>
+}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* 
 <table class="table">
     <thead>
         <tr>
@@ -111,4 +140,4 @@
             </tr>
         }
     </tbody>
-</table>
+</table> *@
