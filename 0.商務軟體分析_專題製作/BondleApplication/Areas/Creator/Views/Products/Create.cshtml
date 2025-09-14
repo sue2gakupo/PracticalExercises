@@ -1,85 +1,128 @@
-﻿@model BondleApplication.Models.Product
+﻿@model BondleApplication.Models.ViewModel.Creator.ProductCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "新增商品";
 }
 
-<h1>Create</h1>
+<h2>新增商品</h2>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ProductID" class="control-label"></label>
-                <input asp-for="ProductID" class="form-control" />
-                <span asp-validation-for="ProductID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductName" class="control-label"></label>
-                <input asp-for="ProductName" class="form-control" />
-                <span asp-validation-for="ProductName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductType" class="control-label"></label>
-                <input asp-for="ProductType" class="form-control" />
-                <span asp-validation-for="ProductType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryID" class="control-label"></label>
-                <select asp-for="CategoryID" class ="form-control" asp-items="ViewBag.CategoryID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="SeriesID" class="control-label"></label>
-                <select asp-for="SeriesID" class ="form-control" asp-items="ViewBag.SeriesID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LaunchDate" class="control-label"></label>
-                <input asp-for="LaunchDate" class="form-control" />
-                <span asp-validation-for="LaunchDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OfflineDate" class="control-label"></label>
-                <input asp-for="OfflineDate" class="form-control" />
-                <span asp-validation-for="OfflineDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SortOrder" class="control-label"></label>
-                <input asp-for="SortOrder" class="form-control" />
-                <span asp-validation-for="SortOrder" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchaseCount" class="control-label"></label>
-                <input asp-for="PurchaseCount" class="form-control" />
-                <span asp-validation-for="PurchaseCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatorID" class="control-label"></label>
-                <select asp-for="CreatorID" class ="form-control" asp-items="ViewBag.CreatorID"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Create" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label asp-for="ProductName"></label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryID"></label>
+        <select asp-for="CategoryID" asp-items="ViewBag.CategoryList" class="form-control">
+            <option value="">請選擇分類</option>
+        </select>
+        <span asp-validation-for="CategoryID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>商品類型</label>
+        <select asp-for="ProductType" class="form-control" id="productType">
+            <option value="Digital">數位商品</option>
+            <option value="Physical">實體商品</option>
+        </select>
+    </div>
+
+    <!-- 數位商品區塊 -->
+    <div id="digitalFields" style="display:none;">
+        <h4>數位商品資訊</h4>
+        <div class="form-group">
+            <label asp-for="Digital.UploadFile"></label>
+            <input asp-for="Digital.UploadFile" type="file" class="form-control" />
+            <span asp-validation-for="Digital.UploadFile" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Digital.PreviewImage"></label>
+            <input asp-for="Digital.PreviewImage" type="file" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Digital.DownloadLimit"></label>
+            <input asp-for="Digital.DownloadLimit" class="form-control" />
+            <span asp-validation-for="Digital.DownloadLimit" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Digital.ValidityDays"></label>
+            <input asp-for="Digital.ValidityDays" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Digital.LicenseType"></label>
+            <input asp-for="Digital.LicenseType" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Digital.LicenseDescription"></label>
+            <textarea asp-for="Digital.LicenseDescription" class="form-control"></textarea>
+        </div>
+    </div>
+
+    <!-- 實體商品區塊 -->
+    <div id="physicalFields" style="display:none;">
+        <h4>實體商品資訊</h4>
+        <div class="form-group">
+            <label asp-for="Physical.Weight"></label>
+            <input asp-for="Physical.Weight" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.Length"></label>
+            <input asp-for="Physical.Length" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.Width"></label>
+            <input asp-for="Physical.Width" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.Height"></label>
+            <input asp-for="Physical.Height" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.DeliveryDays"></label>
+            <input asp-for="Physical.DeliveryDays" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.ShippingFeeType"></label>
+            <input asp-for="Physical.ShippingFeeType" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.FixedShippingFee"></label>
+            <input asp-for="Physical.FixedShippingFee" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.IsFragile"></label>
+            <input asp-for="Physical.IsFragile" type="checkbox" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Physical.PackagingNote"></label>
+            <textarea asp-for="Physical.PackagingNote" class="form-control"></textarea>
+        </div>
+    </div>
+
+    <!-- 商品圖片 -->
+    <div class="form-group">
+        <label asp-for="Images"></label>
+        <input asp-for="Images" type="file" multiple class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">送出</button>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("productType").addEventListener("change", function () {
+            var type = this.value;
+            document.getElementById("digitalFields").style.display = (type === "Digital") ? "block" : "none";
+            document.getElementById("physicalFields").style.display = (type === "Physical") ? "block" : "none";
+        });
+    </script>
 }

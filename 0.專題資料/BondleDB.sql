@@ -199,7 +199,8 @@ CREATE TABLE Product (
 INSERT INTO Product (ProductID, ProductName, [Description], ProductType, CategoryID, SeriesID, Price, [Status], CreatorID)
 VALUES
 ('DI000001' , N'城市夜景插畫電子圖檔', N'高解析度數位插畫，可用於印刷或螢幕背景。', 1, 'CA000002', 'SE000001', 50.00, 1,'CR000001'),
-('PH000001',  N'動物攝影明信片套組', N'包含10張精選動物攝影的實體明信片。', 2, 'CA000007', 'SE000002', 150.00, 1,'CR000002');
+('PH000001',  N'動物攝影明信片套組', N'包含10張精選動物攝影的實體明信片。', 2, 'CA000007', 'SE000002', 150.00, 1,'CR000002'),
+('PH000002',  N'海洋動物Q版玩偶', N'把大型海洋生物縮小成可以懷抱的可愛玩偶!', 2, 'CA000007', 'SE000002', 150.00, 1,'CR000002');
 
 -- 商品款式表
 CREATE TABLE ProductVariations (
@@ -224,11 +225,12 @@ CREATE TABLE ProductVariations (
 	CONSTRAINT UQ_ProductVariations_SKU UNIQUE (SKU)
 );
 
--- 為兩個商品都建立款式
+-- 為商品建立款式
 INSERT INTO ProductVariations (VariationID, SKU, VariationName, Stock, IsActive, IsDefault, ProductID)
 VALUES
 ('PV000001', 'PH000001-SET-A', N'標準套組', 100, 1, 1, 'PH000001'),
-('PV000002', 'DI000001-STD', N'標準版', 999, 1, 1, 'DI000001');
+('PV000002', 'DI000001-STD', N'標準版', 999, 1, 1, 'DI000001'),
+('PV000003', 'PH000002-SEANIMAL-1', N'座頭鯨', 100, 1, 1, 'PH000002');
 
 -- 商品圖片表
 CREATE TABLE ProductImages (
@@ -246,8 +248,9 @@ CREATE TABLE ProductImages (
 
 INSERT INTO ProductImages (ImageID, ImageUrl, SortOrder, FileSize, VariationID)
 VALUES
-('10000001', 'https://example.com/images/products/postcard_main.jpg', 1, 512000, 'PV000001'),
-('10000002', 'https://example.com/images/products/postcard_detail.jpg', 2, 450000, 'PV000001');
+('IM000001', '~/ProductImagesFolder/DI000001/PV000002/IM000001.png', 1, 512000, 'PV000002'),
+('IM000002', '~/ProductImagesFolder/DI000001/PV000002/IM000002.png', 2, 512000, 'PV000002'),
+('IM000003', '~/ProductImagesFolder/PH000002/PV000003/IM000003.png', 1, 512000, 'PV000003');
 
 -- 實體商品表
 CREATE TABLE PhysicalProduct (
@@ -267,7 +270,9 @@ CREATE TABLE PhysicalProduct (
 
 INSERT INTO PhysicalProduct (ProductID, [Weight], [Length], Width, Height, ShippingFeeType, FixedShippingFee)
 VALUES
-('PH000001', 0.250, 15.00, 10.00, 0.50, 2, 60.00);
+('PH000001', 0.250, 15.00, 10.00, 0.50, 2, 60.00),
+('PH000002', 50.000, 60.00, 30.00, 0.50, 2, 60.00);
+
 
 -- 數位商品表
 CREATE TABLE DigitalProduct (

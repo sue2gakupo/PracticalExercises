@@ -12,6 +12,9 @@ builder.Services.AddDbContext<BondleDBContext>(options =>
 builder.Services.AddDbContext<BondleDBContext2>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BondleDBConnection")));
 
+builder.Services.AddScoped<IdGeneratorService>();
+
+
 
 ////////////////////////////////////////////////////////////////
 var app = builder.Build();

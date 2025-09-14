@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BondleApplication.Models.ViewModel
 {
-    public class ProductViewModel
+    public class VisitorProductViewModel
     {
         // from Product
   

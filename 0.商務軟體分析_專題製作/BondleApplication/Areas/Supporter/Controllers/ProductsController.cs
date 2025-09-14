@@ -52,7 +52,7 @@ namespace BondleApplication.Areas.Supporter.Controllers
                         .OrderBy(pi => pi.SortOrder)
                         .FirstOrDefault();
 
-                    return new ProductViewModel
+                    return new VisitorProductViewModel
                     {
                         ProductID = p.ProductID,
                         ProductName = p.ProductName,
@@ -61,7 +61,7 @@ namespace BondleApplication.Areas.Supporter.Controllers
                         VariationID = productVariation.VariationID,
                         VariationName = productVariation.VariationName,
                         Stock = productVariation.Stock,
-                        ImageID = productImage?.ImageID ?? "",
+                        //ImageID = productImage?.ImageID ?? "",
                         ImageUrl = productImage?.ImageUrl ?? "/NoImage/no_image.png",
                         SortOrder = productImage?.SortOrder ?? 0
                     };
@@ -77,7 +77,7 @@ namespace BondleApplication.Areas.Supporter.Controllers
                 // _logger.LogError(ex, "Error occurred while fetching products");
 
                 // 返回空列表
-                return View(new List<ProductViewModel>());
+                return View(new List<VisitorProductViewModel>());
             }
         }
 
@@ -85,8 +85,6 @@ namespace BondleApplication.Areas.Supporter.Controllers
 // GET: Supporter/Products/Details/5
 public async Task<IActionResult> Details(string id)
         {
-
-
 
 
             if (id == null)
