@@ -10,9 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BondleApplication.Areas.Supporter.Controllers
+namespace BondleApplication.Areas.UserSupporter.Controllers
 {
-    [Area("Supporter")]
+    [Area("UserSupporter")]
     public class ProductsController : Controller
     {
         private readonly BondleDBContext2 _context;
@@ -61,7 +61,6 @@ namespace BondleApplication.Areas.Supporter.Controllers
                         VariationID = productVariation.VariationID,
                         VariationName = productVariation.VariationName,
                         Stock = productVariation.Stock,
-                        //ImageID = productImage?.ImageID ?? "",
                         ImageUrl = productImage?.ImageUrl ?? "/NoImage/no_image.png",
                         SortOrder = productImage?.SortOrder ?? 0
                     };

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BondleApplication.Models.ViewModel.Creator
+namespace BondleApplication.Models.ViewModel
 {
-    public class ProductVariationsViewModel
+    public class ProductVariationsCreateVM
     {
         [ScaffoldColumn(false)]
         public string? VariationID { get; set; }

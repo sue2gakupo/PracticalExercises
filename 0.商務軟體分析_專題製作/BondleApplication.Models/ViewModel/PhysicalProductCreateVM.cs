@@ -5,10 +5,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BondleApplication.Models.ViewModel.Creator
+namespace BondleApplication.Models.ViewModel
 {
-    public class PhysicalProductViewModel
+    public class PhysicalProductCreateVM
     {
+        // === Product 基本資訊 ===
+        [Required(ErrorMessage = "請輸入商品名稱")]
+        [StringLength(100)]
+        public string ProductName { get; set; }
+
+        // 商品描述
+        public string? Description { get; set; }
+
+        // 商品類型 (0 = Digital, 1 = Physical)
+        [Required(ErrorMessage = "請選擇商品類型")]
+        public byte ProductType { get; set; }
+
+        // 類別 ID（必填，從資料庫 Category 下拉選擇）
+        [Required(ErrorMessage = "請選擇商品分類")]
+        public string CategoryID { get; set; }
+
+        // 所屬系列（可選填）
+        public string? SeriesID { get; set; }
+
+        // 價格
+        [Required(ErrorMessage = "請輸入商品價格")]
+        [Range(0, double.MaxValue, ErrorMessage = "價格必須大於等於 0")]
+        public decimal Price { get; set; }
 
         // 重量 (kg)，可選填
         [Range(0, 99999999.999, ErrorMessage = "重量(公克)錯誤")]

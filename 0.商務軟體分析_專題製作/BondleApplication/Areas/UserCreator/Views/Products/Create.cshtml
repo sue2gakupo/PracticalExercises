@@ -1,10 +1,11 @@
-﻿@model BondleApplication.Models.ViewModel.Creator.ProductCreateViewModel
+﻿@using BondleApplication.Models.ViewModel
+@model ProductCreateViewModel
 
 @{
     ViewData["Title"] = "新增商品";
 }
 
-<h2>新增商品</h2>
+<h2>@ViewData["Title"]</h2>
 
 <form asp-action="Create" enctype="multipart/form-data" method="post">
     <div class="form-group">
@@ -12,11 +13,12 @@
         <input asp-for="ProductName" class="form-control" />
         <span asp-validation-for="ProductName" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
+        <label>商品類型</label>
+        <select asp-for="ProductType" class="form-control" id="productType">
+            <option value="1">數位商品</option>
+            <option value="2">實體商品</option>
+        </select>
     </div>
 
     <div class="form-group">
@@ -28,12 +30,14 @@
     </div>
 
     <div class="form-group">
-        <label>商品類型</label>
-        <select asp-for="ProductType" class="form-control" id="productType">
-            <option value="Digital">數位商品</option>
-            <option value="Physical">實體商品</option>
-        </select>
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
+
+
+
+
 
     <!-- 數位商品區塊 -->
     <div id="digitalFields" style="display:none;">

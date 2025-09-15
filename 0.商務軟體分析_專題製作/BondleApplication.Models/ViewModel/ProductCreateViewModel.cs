@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BondleApplication.Models.ViewModel.Creator
+namespace BondleApplication.Models.ViewModel
 {
     public class ProductCreateViewModel
     {
@@ -34,14 +34,14 @@ namespace BondleApplication.Models.ViewModel.Creator
         public decimal Price { get; set; }
 
         // === 額外資訊 ===
-        public DigitalProductViewModel? Digital { get; set; }
-        public PhysicalProductViewModel? Physical { get; set; }
+        public DigitalProductCreateVM? Digital { get; set; }
+        public PhysicalProductCreateVM? Physical { get; set; }
 
         // 商品規格（可有多個）
-        public List<ProductVariationsViewModel> Variations { get; set; } = new();
+        public List<ProductVariationsCreateVM> Variations { get; set; } = new();
 
         // 商品圖片（對應 Variation）
-        public List<ProductImagesViewModel> Images { get; set; } = new();
+        public List<ProductImagesVM> Images { get; set; } = new();
 
         // 選擇系列（若要新建系列，可以用 ProductSeriesViewModel）
         public ProductSeriesViewModel? NewSeries { get; set; }

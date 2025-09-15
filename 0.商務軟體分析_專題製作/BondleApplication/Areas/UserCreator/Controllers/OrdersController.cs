@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using BondleApplication.Access.Data;
 using BondleApplication.Models;
 
-namespace BondleApplication.Areas.Creator.Controllers
+namespace BondleApplication.Areas.UserCreator.Controllers
 {
-    [Area("Creator")]
+    [Area("UserCreator")]
     public class OrdersController : Controller
     {
         private readonly BondleDBContext2 _context;

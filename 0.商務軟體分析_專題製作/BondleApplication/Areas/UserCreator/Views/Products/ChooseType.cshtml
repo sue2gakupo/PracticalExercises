@@ -1,0 +1,138 @@
+﻿@model IEnumerable<BondleApplication.Models.Product>
+
+@{
+    ViewData["Title"] = "新增商品";
+}
+<h2>@ViewData["Title"]</h2>
+
+<div class="form-group">
+    <label>選擇商品類型</label>
+    <select id="productType" class="form-control">
+        <option value="">-- 請選擇 --</option>
+        <option value="digital">數位商品</option>
+        <option value="physical">實體商品</option>
+    </select>
+</div>
+
+<div id="productFormContainer"></div>
+
+@section Scripts {
+    <script>
+        $("#productType").change(function () {
+            let type = $(this).val();
+            if (type) {
+                $.get("/UserCreator/Products/LoadCreateForm?type=" + type, function (html) {
+                    $("#productFormContainer").html(html);
+                });
+            } else {
+                $("#productFormContainer").empty();
+            }
+        });
+    </script>
+}
+
+
+
+
+@* <table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaunchDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OfflineDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SortOrder)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Creator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Series)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaunchDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OfflineDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SortOrder)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Creator.CreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Series.SeriesID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
+            </td>
+        </tr> 
+ }
+    </tbody>
+</table> *@
