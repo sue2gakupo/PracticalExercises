@@ -37,4 +37,9 @@
     <Content Include="Areas\UserCreator\Views\Products\Index.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Areas\UserCreator\Views\Products\PartialView\_DigitalProductForm.cshtml" />
+    <None Include="Areas\UserCreator\Views\Products\PartialView\_PhysicalProductForm.cshtml" />
+  </ItemGroup>
+
 </Project>

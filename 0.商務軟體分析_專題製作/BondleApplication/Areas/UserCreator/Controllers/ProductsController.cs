@@ -69,7 +69,10 @@ namespace BondleApplication.Areas.UserCreator.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                ViewBag.CategoryList = new SelectList(_context.Category
+                    .AsNoTracking(), "CategoryID", "CategoryName");
+              
+                 
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();

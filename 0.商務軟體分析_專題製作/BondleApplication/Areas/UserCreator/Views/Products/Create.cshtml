@@ -37,23 +37,16 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label asp-for="Price" class="form-label"></label>
-                                    <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                                    <input asp-for="Price" class="form-control" type="number"  />
                                     <span asp-validation-for="Price" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label asp-for="CategoryID" class="form-label"></label>
-                                    <input asp-for="CategoryID" class="form-control" />
-                                    <span asp-validation-for="Category" class="text-danger"></span>
+                                    <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryList" ></select>
+                                    <span asp-validation-for="CategoryID" class="text-danger"></span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <div>
-                                <label asp-for="Status" class="form-label"></label>
-                                <input asp-for="Status" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -68,7 +61,7 @@
                     </div>
                     <div class="card-body" id="productImagesContainer">
                         <div class="alert alert-info">
-                            <small>請先儲存產品基本資訊後再上傳圖片</small>
+                            <small>請先設定商品款式後再上傳商品圖片</small>
                         </div>
                     </div>
                 </div>
@@ -91,7 +84,7 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="variations-tab" data-bs-toggle="tab" data-bs-target="#variations" type="button" role="tab">
-                            產品變化
+                            產品款式
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -105,7 +98,7 @@
                     <div class="tab-pane fade show active" id="digital" role="tabpanel">
                         <div id="digitalProductContainer">
                             <div class="alert alert-info">
-                                <small>請先儲存產品基本資訊後載入數位產品設定</small>
+                                <small>請先儲存產品基本資訊後載入數位商品設定</small>
                             </div>
                         </div>
                     </div>
@@ -113,7 +106,7 @@
                     <div class="tab-pane fade" id="physical" role="tabpanel">
                         <div id="physicalProductContainer">
                             <div class="alert alert-info">
-                                <small>請先儲存產品基本資訊後載入實體產品設定</small>
+                                <small>請先儲存產品基本資訊後載入實體商品設定</small>
                             </div>
                         </div>
                     </div>
@@ -121,7 +114,7 @@
                     <div class="tab-pane fade" id="variations" role="tabpanel">
                         <div id="variationsContainer">
                             <div class="alert alert-info">
-                                <small>請先儲存產品基本資訊後載入產品變化設定</small>
+                                <small>請先儲存產品基本資訊後載入商品款式設定</small>
                             </div>
                         </div>
                     </div>
@@ -186,7 +179,7 @@
                 $('#seriesContainer').load(`/ProSeries/GetByProductId/${currentProductId}`);
 
                 // 載入產品圖片表單
-                $('#productImagesContainer').load(`/ProductImage/GetByProductId/${currentProductId}`);
+                $('#productImagesContainer').load(`/ProductImage/GetByVariationId/${currentVariationId}`);
             }
 
             // Tab 點擊事件
