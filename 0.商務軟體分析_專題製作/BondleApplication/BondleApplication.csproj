@@ -7,8 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\UserCreator\Views\Products\**" />
+    <Content Remove="Areas\UserCreator\Views\Products\**" />
+    <EmbeddedResource Remove="Areas\UserCreator\Views\Products\**" />
+    <None Remove="Areas\UserCreator\Views\Products\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.8" />
     <PackageReference Include="jQuery" Version="3.7.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +27,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BondleApplication.Access\BondleApplication.Access.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Areas\UserCreator\Views\Products\Create.cshtml" />
+    <Content Include="Areas\UserCreator\Views\Products\Delete.cshtml" />
+    <Content Include="Areas\UserCreator\Views\Products\Details.cshtml" />
+    <Content Include="Areas\UserCreator\Views\Products\Edit.cshtml" />
+    <Content Include="Areas\UserCreator\Views\Products\Index.cshtml" />
   </ItemGroup>
 
 </Project>

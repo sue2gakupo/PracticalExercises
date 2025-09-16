@@ -1,132 +1,262 @@
-﻿@using BondleApplication.Models.ViewModel
-@model ProductCreateViewModel
+﻿@model BondleApplication.Models.Product
 
 @{
     ViewData["Title"] = "新增商品";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<form asp-action="Create" enctype="multipart/form-data" method="post">
-    <div class="form-group">
-        <label asp-for="ProductName"></label>
-        <input asp-for="ProductName" class="form-control" />
-        <span asp-validation-for="ProductName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>商品類型</label>
-        <select asp-for="ProductType" class="form-control" id="productType">
-            <option value="1">數位商品</option>
-            <option value="2">實體商品</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="CategoryID"></label>
-        <select asp-for="CategoryID" asp-items="ViewBag.CategoryList" class="form-control">
-            <option value="">請選擇分類</option>
-        </select>
-        <span asp-validation-for="CategoryID" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-
-
-
-
-    <!-- 數位商品區塊 -->
-    <div id="digitalFields" style="display:none;">
-        <h4>數位商品資訊</h4>
-        <div class="form-group">
-            <label asp-for="Digital.UploadFile"></label>
-            <input asp-for="Digital.UploadFile" type="file" class="form-control" />
-            <span asp-validation-for="Digital.UploadFile" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Digital.PreviewImage"></label>
-            <input asp-for="Digital.PreviewImage" type="file" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Digital.DownloadLimit"></label>
-            <input asp-for="Digital.DownloadLimit" class="form-control" />
-            <span asp-validation-for="Digital.DownloadLimit" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Digital.ValidityDays"></label>
-            <input asp-for="Digital.ValidityDays" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Digital.LicenseType"></label>
-            <input asp-for="Digital.LicenseType" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Digital.LicenseDescription"></label>
-            <textarea asp-for="Digital.LicenseDescription" class="form-control"></textarea>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+           
+            <h2>@ViewData["Title"]</h2>
         </div>
     </div>
 
-    <!-- 實體商品區塊 -->
-    <div id="physicalFields" style="display:none;">
-        <h4>實體商品資訊</h4>
-        <div class="form-group">
-            <label asp-for="Physical.Weight"></label>
-            <input asp-for="Physical.Weight" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.Length"></label>
-            <input asp-for="Physical.Length" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.Width"></label>
-            <input asp-for="Physical.Width" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.Height"></label>
-            <input asp-for="Physical.Height" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.DeliveryDays"></label>
-            <input asp-for="Physical.DeliveryDays" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.ShippingFeeType"></label>
-            <input asp-for="Physical.ShippingFeeType" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.FixedShippingFee"></label>
-            <input asp-for="Physical.FixedShippingFee" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.IsFragile"></label>
-            <input asp-for="Physical.IsFragile" type="checkbox" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Physical.PackagingNote"></label>
-            <textarea asp-for="Physical.PackagingNote" class="form-control"></textarea>
-        </div>
-    </div>
+    <form asp-action="Create" id="mainProductForm">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <!-- 商品圖片 -->
-    <div class="form-group">
-        <label asp-for="Images"></label>
-        <input asp-for="Images" type="file" multiple class="form-control" />
-    </div>
+        <div class="row">
+            <!-- 主要產品資訊 -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>基本資訊</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label asp-for="ProductName" class="form-label"></label>
+                            <input asp-for="ProductName" class="form-control" />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>       
+                        <div class="form-group mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Price" class="form-label"></label>
+                                    <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="CategoryID" class="form-label"></label>
+                                    <input asp-for="CategoryID" class="form-control" />
+                                    <span asp-validation-for="Category" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
 
-    <button type="submit" class="btn btn-primary">送出</button>
-</form>
+                        <div class="form-group mb-3">
+                            <div>
+                                <label asp-for="Status" class="form-label"></label>
+                                <input asp-for="Status" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 產品圖片 -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>產品圖片</h4>
+                    </div>
+                    <div class="card-body" id="productImagesContainer">
+                        <div class="alert alert-info">
+                            <small>請先儲存產品基本資訊後再上傳圖片</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="digital-tab" data-bs-toggle="tab" data-bs-target="#digital" type="button" role="tab">
+                            數位產品
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="physical-tab" data-bs-toggle="tab" data-bs-target="#physical" type="button" role="tab">
+                            實體產品
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="variations-tab" data-bs-toggle="tab" data-bs-target="#variations" type="button" role="tab">
+                            產品變化
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="series-tab" data-bs-toggle="tab" data-bs-target="#series" type="button" role="tab">
+                            產品系列
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="productTabContent">
+                    <div class="tab-pane fade show active" id="digital" role="tabpanel">
+                        <div id="digitalProductContainer">
+                            <div class="alert alert-info">
+                                <small>請先儲存產品基本資訊後載入數位產品設定</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="physical" role="tabpanel">
+                        <div id="physicalProductContainer">
+                            <div class="alert alert-info">
+                                <small>請先儲存產品基本資訊後載入實體產品設定</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="variations" role="tabpanel">
+                        <div id="variationsContainer">
+                            <div class="alert alert-info">
+                                <small>請先儲存產品基本資訊後載入產品變化設定</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="series" role="tabpanel">
+                        <div id="seriesContainer">
+                            <div class="alert alert-info">
+                                <small>請先儲存產品基本資訊後載入產品系列設定</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary me-2">儲存產品</button>
+                <a asp-action="Index" class="btn btn-secondary">取消</a>
+            </div>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
     <script>
-        document.getElementById("productType").addEventListener("change", function () {
-            var type = this.value;
-            document.getElementById("digitalFields").style.display = (type === "Digital") ? "block" : "none";
-            document.getElementById("physicalFields").style.display = (type === "Physical") ? "block" : "none";
+        $(document).ready(function() {
+            let currentProductId = null;
+
+            // 主要產品表單提交
+            $('#mainProductForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.post($(this).attr('action'), $(this).serialize())
+                .done(function(data) {
+                    if (data.success || data.id) {
+                        currentProductId = data.id || data.productId;
+                        toastr.success('產品基本資訊已儲存');
+                        loadSubForms();
+                    } else {
+                        toastr.error('儲存失敗');
+                    }
+                })
+                .fail(function() {
+                    toastr.error('發生錯誤，請稍後再試');
+                });
+            });
+
+            function loadSubForms() {
+                if (!currentProductId) return;
+
+                // 載入數位產品表單
+                $('#digitalProductContainer').load(`/DigitalProduct/GetByProductId/${currentProductId}`);
+
+                // 載入實體產品表單
+                $('#physicalProductContainer').load(`/PhysicalProduct/GetByProductId/${currentProductId}`);
+
+                // 載入產品款式表單
+                $('#variationsContainer').load(`/ProductVariation/GetByProductId/${currentProductId}`);
+
+                // 載入產品系列表單
+                $('#seriesContainer').load(`/ProSeries/GetByProductId/${currentProductId}`);
+
+                // 載入產品圖片表單
+                $('#productImagesContainer').load(`/ProductImage/GetByProductId/${currentProductId}`);
+            }
+
+            // Tab 點擊事件
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if (currentProductId) {
+                    const target = $(e.target).data('bs-target');
+                    if (!$(target + ' form').length) {
+                        loadSubForms();
+                    }
+                }
+            });
         });
     </script>
 }
+
+
+
+
+@* <h1>Create</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductID" class="control-label"></label>
+                <input asp-for="ProductID" class="form-control" />
+                <span asp-validation-for="ProductID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductType" class="control-label"></label>
+                <input asp-for="ProductType" class="form-control" />
+                <span asp-validation-for="ProductType" class="text-danger"></span>
+            </div>
+          
+
+            <div class="form-group">
+                <label asp-for="LaunchDate" class="control-label"></label>
+                <input asp-for="LaunchDate" class="form-control" />
+                <span asp-validation-for="LaunchDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OfflineDate" class="control-label"></label>
+                <input asp-for="OfflineDate" class="form-control" />
+                <span asp-validation-for="OfflineDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SortOrder" class="control-label"></label>
+                <input asp-for="SortOrder" class="form-control" />
+                <span asp-validation-for="SortOrder" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseCount" class="control-label"></label>
+                <input asp-for="PurchaseCount" class="form-control" />
+                <span asp-validation-for="PurchaseCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatorID" class="control-label"></label>
+                <select asp-for="CreatorID" class ="form-control" asp-items="ViewBag.CreatorID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div> *@
+

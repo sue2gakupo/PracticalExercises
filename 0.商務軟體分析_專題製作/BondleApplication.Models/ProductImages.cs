@@ -34,4 +34,9 @@ public partial class ProductImages
     [ForeignKey("VariationID")]
     [InverseProperty("ProductImages")]
     public virtual ProductVariations Variation { get; set; } = null!;
+
+    public static implicit operator string?(ProductImages? v)
+    {
+        throw new NotImplementedException();
+    }
 }
