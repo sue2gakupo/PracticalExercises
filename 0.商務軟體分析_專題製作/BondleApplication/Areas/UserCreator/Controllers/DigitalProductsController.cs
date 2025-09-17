@@ -83,7 +83,7 @@ namespace BondleApplication.Areas.UserCreator.Controllers
             {
                 _context.DigitalProduct.Update(digitalProduct);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "數位產品資料已更新" });
+                return Json(new { success = true, message = "數位商品資料已更新" });
             }
 
             var errors = ModelState.Values

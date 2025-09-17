@@ -64,7 +64,7 @@ namespace BondleApplication.Areas.UserCreator.Controllers
             {
                 _context.Add(physicalProduct);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "實體產品資料已儲存" });
+                return Json(new { success = true, message = "實體商品資料已儲存" });
             }
 
             var errors = ModelState.Values
@@ -84,7 +84,7 @@ namespace BondleApplication.Areas.UserCreator.Controllers
             {
                 _context.PhysicalProduct.Update(physicalProduct);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "實體產品資料已更新" });
+                return Json(new { success = true, message = "實體商品資料已更新" });
             }
 
             var errors = ModelState.Values

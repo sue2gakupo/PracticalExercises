@@ -1,5 +1,7 @@
 using BondleApplication.Access.Data;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,11 @@ builder.Services.AddDbContext<BondleDBContext2>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BondleDBConnection")));
 
 builder.Services.AddScoped<IdGeneratorService>();
+
+builder.Services.Configure<RazorViewEngineOptions>(options =>
+{
+    options.ViewLocationFormats.Add("/Views/Shared/Partials/{0}.cshtml");
+});
 
 
 

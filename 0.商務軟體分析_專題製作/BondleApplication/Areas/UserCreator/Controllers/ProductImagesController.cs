@@ -49,6 +49,33 @@ namespace BondleApplication.Areas.UserCreator.Controllers
             return View(productImages);
         }
 
+
+        // GET: UserCreator/ProductImages/Create
+        public IActionResult Create()
+        {
+            ViewData["VariationID"] = new SelectList(_context.ProductVariations, "VariationID", "VariationID");
+            return View();
+        }
+
+        // POST: UserCreator/ProductImages/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ImageID,ImageUrl,SortOrder,ImageCaption,FileSize,CreateDate,UpdateDate,VariationID")] ProductImages productImages)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(productImages);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["VariationID"] = new SelectList(_context.ProductVariations, "VariationID", "VariationID", productImages.VariationID);
+            return View(productImages);
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(string variationId, IFormFile imageFile, string imageCaption, string id)
@@ -58,7 +85,7 @@ namespace BondleApplication.Areas.UserCreator.Controllers
                 var uploadsPath = Path.Combine(_environment.WebRootPath, "ProductImagesFolder", variationId);
                 Directory.CreateDirectory(uploadsPath);
 
-                // 產生自訂格式的 ImageID
+                // 商生自訂格式的 ImageID
                 var lastImage = await _context.ProductImages
                     .OrderByDescending(m => m.ImageID == id)
                     .FirstOrDefaultAsync();
@@ -138,73 +165,51 @@ namespace BondleApplication.Areas.UserCreator.Controllers
         }
 
         // POST: UserCreator/ProductImages/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(string id)
+        //{
+        //    var productImages = await _context.ProductImages.FindAsync(id);
+        //    if (productImages != null)
+        //    {
+        //        _context.ProductImages.Remove(productImages);
+        //    }
+
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //public IActionResult GetByVariationID(string variationId)
+        //{
+        //    var images = _context.ProductImages
+        //        .Where(i => i.VariationID == variationId)
+        //        .ToList();
+
+        //    ViewBag.VariationID = variationId;
+        //    return PartialView("_ProductImagesForm", images);
+        //}
+
+
+
+
+        
+
+        // GET: UserCreator/ProductImages/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
-            var productImages = await _context.ProductImages.FindAsync(id);
-            if (productImages != null)
+            if (id == null)
             {
-                _context.ProductImages.Remove(productImages);
+                return NotFound();
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var productImages = await _context.ProductImages.FindAsync(id);
+            if (productImages == null)
+            {
+                return NotFound();
+            }
+            ViewData["VariationID"] = new SelectList(_context.ProductVariations, "VariationID", "VariationID", productImages.VariationID);
+            return View(productImages);
         }
-
-        public IActionResult GetByVariationID(string variationId)
-        {
-            var images = _context.ProductImages
-                .Where(i => i.VariationID == variationId)
-                .ToList();
-
-            ViewBag.VariationID = variationId;
-            return PartialView("_ProductImagesForm", images);
-        }
-
-
-
-
-        //// GET: UserCreator/ProductImages/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["VariationID"] = new SelectList(_context.ProductVariations, "VariationID", "VariationID");
-        //    return View();
-        //}
-
-        //// POST: UserCreator/ProductImages/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("ImageID,ImageUrl,SortOrder,ImageCaption,FileSize,CreateDate,UpdateDate,VariationID")] ProductImages productImages)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(productImages);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["VariationID"] = new SelectList(_context.ProductVariations, "VariationID", "VariationID", productImages.VariationID);
-        //    return View(productImages);
-        //}
-
-        //// GET: UserCreator/ProductImages/Edit/5
-        //public async Task<IActionResult> Edit(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var productImages = await _context.ProductImages.FindAsync(id);
-        //    if (productImages == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["VariationID"] = new SelectList(_context.ProductVariations, "VariationID", "VariationID", productImages.VariationID);
-        //    return View(productImages);
-        //}
 
         //// POST: UserCreator/ProductImages/Edit/5
         //// To protect from overposting attacks, enable the specific properties you want to bind to.

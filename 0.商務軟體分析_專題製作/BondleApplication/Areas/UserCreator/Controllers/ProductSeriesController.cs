@@ -64,7 +64,7 @@ namespace BondleApplication.Areas.UserCreator.Controllers
             {
                 _context.Add(productSeries);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "產品系列資料已儲存" });
+                return Json(new { success = true, message = "商品系列資料已儲存" });
             }
 
             var errors = ModelState.Values
@@ -84,7 +84,7 @@ namespace BondleApplication.Areas.UserCreator.Controllers
             {
                 _context.ProductSeries.Update(productSeries);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "產品系列資料已更新" });
+                return Json(new { success = true, message = "商品系列資料已更新" });
             }
 
             var errors = ModelState.Values

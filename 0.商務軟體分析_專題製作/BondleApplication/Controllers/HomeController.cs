@@ -70,12 +70,12 @@ namespace BondleApplication.Controllers
 //2.1.3 在對話方塊中設定如下
 //      模型類別: tStudent(MyModel_DBFirst.Models)
 //      資料內容類別: dbStudentsContext(MyModel_DBFirst.Models)
-//      勾選 產生檢視
+//      勾選 商生檢視
 //      勾選 參考指令碼程式庫
 //      勾選 使用版面配置頁
 //      控制器名稱使用預設即可(tStudentsController)
 //      按下「新增」鈕
-//2.1.4 此時Visual Studio會進行Scaffolding動作，將產出一個tStudentsController
+//2.1.4 此時Visual Studio會進行Scaffolding動作，將商出一個tStudentsController
 //      (會包含所有相關的Action)及五個View(Index.cshtml、Create.cshtml、Edit.cshtml、Delete.cshtml、Details.cshtml)的全部程式碼
 
 //      ※備註說明※
@@ -255,7 +255,7 @@ namespace BondleApplication.Controllers
 //5.3.4 在對話方塊中設定如下
 //      模型類別: tStudent(MyModel_DBFirst.Models)
 //      資料內容類別: dbStudentsContext(MyModel_DBFirst.Models)
-//      勾選 產生檢視
+//      勾選 商生檢視
 //      勾選 參考指令碼程式庫
 //      勾選 使用版面配置頁
 //      控制器名稱使tStudents2Controller
@@ -282,7 +282,7 @@ namespace BondleApplication.Controllers
 //5.6.3 在對話方塊中設定如下
 //      模型類別: Department(MyModel_DBFirst.Models)
 //      資料內容類別: dbStudentsContext(MyModel_DBFirst.Models)
-//      勾選 產生檢視
+//      勾選 商生檢視
 //      勾選 參考指令碼程式庫
 //      勾選 使用版面配置頁
 //      控制器名稱使用預設即可(DepartmentsController)

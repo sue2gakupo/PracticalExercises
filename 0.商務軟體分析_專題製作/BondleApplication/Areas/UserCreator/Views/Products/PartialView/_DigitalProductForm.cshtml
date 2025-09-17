@@ -1,22 +1,23 @@
-﻿@model DigitalProduct
+﻿
+@model BondleApplication.Models.DigitalProduct
 
-<form id="digitalProductForm" data-product-id="@Model.ProductId">
+<form id="digitalProductForm" data-product-id="@Model.ProductID">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <input asp-for="ProductId" type="hidden" />
-    <input asp-for="Id" type="hidden" />
+    <input asp-for="ProductID" type="hidden" />
+    <input asp-for="ProductID" type="hidden" />
 
     <div class="card">
         <div class="card-header">
-            <h5>數位產品設定</h5>
+            <h5>數位商品設定</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label asp-for="DownloadUrl" class="form-label"></label>
-                        <input asp-for="DownloadUrl" class="form-control" />
-                        <span asp-validation-for="DownloadUrl" class="text-danger"></span>
+                        <label asp-for="FilePath" class="form-label"></label>
+                        <input asp-for="FilePath" class="form-control" />
+                        <span asp-validation-for="FilePath" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -51,12 +52,12 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="SystemRequirements" class="form-label"></label>
-                <textarea asp-for="SystemRequirements" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="SystemRequirements" class="text-danger"></span>
+                <label asp-for="LicenseDescription" class="form-label"></label>
+                <textarea asp-for="LicenseDescription" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="LicenseDescription" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-success">儲存數位產品資料</button>
+            <button type="submit" class="btn btn-success">儲存數位商品資料</button>
         </div>
     </div>
 </form>
@@ -66,7 +67,7 @@
         $('#digitalProductForm').on('submit', function(e) {
             e.preventDefault();
 
-            const url = '@Model.Id' > 0 ? '/DigitalProduct/Update' : '/DigitalProduct/Create';
+            const url = '@Model.ProductID' > 0 ? '/DigitalProduct/Update' : '/DigitalProduct/Create';
 
             $.post(url, $(this).serialize())
             .done(function(data) {

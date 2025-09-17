@@ -16,7 +16,6 @@
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.8" />
     <PackageReference Include="jQuery" Version="3.7.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -40,6 +39,10 @@
   <ItemGroup>
     <None Include="Areas\UserCreator\Views\Products\PartialView\_DigitalProductForm.cshtml" />
     <None Include="Areas\UserCreator\Views\Products\PartialView\_PhysicalProductForm.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\DigitalFile\" />
   </ItemGroup>
 
 </Project>
