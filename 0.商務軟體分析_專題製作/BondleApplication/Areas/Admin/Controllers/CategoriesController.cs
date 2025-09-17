@@ -67,7 +67,7 @@ namespace BondleApplication.Areas.Admin.Controllers
             {
                 _context.Add(category);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View();
             }
             ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", category.ParentCategoryID);
             return View(category);

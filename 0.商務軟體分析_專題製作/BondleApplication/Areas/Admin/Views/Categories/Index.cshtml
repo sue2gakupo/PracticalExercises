@@ -27,9 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.IsActive)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParentCategory)
-            </th>
+           
             <th></th>
         </tr>
     </thead>
@@ -52,9 +50,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.IsActive)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ParentCategory.CategoryID)
-                </td>
+                
                 <td>
                     <a asp-area="Admin" asp-controller="Categories"  asp-action="Edit" asp-route-id="@item.CategoryID">編輯</a> |
                     <a asp-area="Admin" asp-controller="Categories"  asp-action="Details" asp-route-id="@item.CategoryID">詳細資訊</a> |
