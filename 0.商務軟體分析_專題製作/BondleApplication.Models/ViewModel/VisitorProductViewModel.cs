@@ -23,6 +23,8 @@ namespace BondleApplication.Models.ViewModel
         //from ProductImage 
         public string ImageID { get; set; }
         public string ImageUrl { get; set; }
+
+        public string ImageCaption { get; set; }
         public int SortOrder { get; set; }
 
     }

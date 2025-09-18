@@ -18,8 +18,6 @@ public partial class Category
     [StringLength(200)]
     public string? Description { get; set; }
 
-    [StringLength(8)]
-    public string? ParentCategoryID { get; set; }
 
     [StringLength(500)]
     public string? IconUrl { get; set; }
@@ -28,12 +26,6 @@ public partial class Category
 
     public bool IsActive { get; set; }
 
-    [InverseProperty("ParentCategory")]
-    public virtual ICollection<Category> InverseParentCategory { get; set; } = new List<Category>();
-
-    [ForeignKey("ParentCategoryID")]
-    [InverseProperty("InverseParentCategory")]
-    public virtual Category? ParentCategory { get; set; }
 
     [InverseProperty("Category")]
     public virtual ICollection<Product> Product { get; set; } = new List<Product>();

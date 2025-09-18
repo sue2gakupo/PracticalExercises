@@ -52,9 +52,9 @@
                 </td>
                 
                 <td>
-                    <a asp-area="Admin" asp-controller="Categories"  asp-action="Edit" asp-route-id="@item.CategoryID">編輯</a> |
-                    <a asp-area="Admin" asp-controller="Categories"  asp-action="Details" asp-route-id="@item.CategoryID">詳細資訊</a> |
-                    <a asp-area="Admin" asp-controller="Categories"  asp-action="Delete" asp-route-id="@item.CategoryID">刪除</a>
+                    <a asp-area="Admin" asp-controller="Categories"  asp-action="Edit" asp-route-id="@item.CategoryID" class="btn btn-outline-warning">編輯</a> |
+                    <a asp-area="Admin" asp-controller="Categories"  asp-action="Details" asp-route-id="@item.CategoryID" class="btn btn-outline-primary">詳細資訊</a> |
+                    <a asp-area="Admin" asp-controller="Categories"  asp-action="Delete" asp-route-id="@item.CategoryID" class="btn btn-danger">刪除</a>
                 </td>
             </tr>
         }

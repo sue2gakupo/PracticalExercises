@@ -14,6 +14,7 @@ GO
 USE BondleDB;
 GO
 
+
 -- 會員登入資料表
 CREATE TABLE Member (
     MemberID nchar(36) NOT NULL,
@@ -29,13 +30,19 @@ CREATE TABLE Member (
     CONSTRAINT UQ_Member_Email UNIQUE (Email)
 );
 
+
+
 -- 插入會員資料 (需包含所有必要的會員ID)
 INSERT INTO Member (MemberID, Email, PasswordHash, [Name], IsEmailVerified, [Status])
 VALUES
-    ('50d1b32d-20d0-48e0-a4f6-7b61c944f2e8', 'creator_a@example.com', 'hash_for_creator_a', N'王創作者', 1, 1),
-    ('b4c9e8a7-a2f2-4c28-9d29-612b7a9f8f2d', 'supporter_b@example.com', 'hash_for_supporter_b', N'陳支持者', 1, 1),
-    ('e92c23f1-f0e2-4d2d-9e6b-a2c9b4d1c1a2', 'creator_c@example.com', 'hash_for_creator_c', N'林創作者', 1, 1),
-    ('a1b2c3d4-e5f6-7890-1234-567890abcdef', 'disabled_user@example.com', 'hash_for_disabled_user', N'停用會員', 1, 2);
+    ('50d1b32d-20d0-48e0-a4f6-7b61c944f2e8', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5
+', 'hash_for_creator_a', N'王創作者', 1, 1),
+    ('b4c9e8a7-a2f2-4c28-9d29-612b7a9f8f2d', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5
+', 'hash_for_supporter_b', N'陳支持者', 1, 1),
+    ('e92c23f1-f0e2-4d2d-9e6b-a2c9b4d1c1a2', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5
+', 'hash_for_creator_c', N'林創作者', 1, 1),
+    ('a1b2c3d4-e5f6-7890-1234-567890abcdef', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5
+', 'hash_for_disabled_user', N'停用會員', 1, 2);
 
 -- 創作者表
 CREATE TABLE Creator (
@@ -126,12 +133,10 @@ CREATE TABLE Category (
     CategoryID nchar(8) NOT NULL,
     CategoryName nvarchar(50) NOT NULL,
     [Description] nvarchar(200) NULL,
-    ParentCategoryID nchar(8) NULL,
     IconUrl nvarchar(500) NULL,
     SortOrder int NOT NULL DEFAULT 0,
     IsActive bit NOT NULL DEFAULT 1,
     CONSTRAINT PK_Category PRIMARY KEY (CategoryID),
-    CONSTRAINT FK_Category_Parent FOREIGN KEY (ParentCategoryID) REFERENCES Category(CategoryID)
 );
 
 -- 建立根分類

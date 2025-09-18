@@ -23,14 +23,14 @@ namespace BondleApplication.Areas.Admin.Controllers
         }
 
    
-        // GET: Categories
+
         public async Task<IActionResult> Index()
         {
-            var bondleDBContext2 = _context.Category.Include(c => c.ParentCategory);
+            var bondleDBContext2 = _context.Category;
             return View(await bondleDBContext2.ToListAsync());
         }
 
-        // GET: Categories/Details/5
+
         public async Task<IActionResult> Details(string id,string CAName)
         {
             if (id == null)
@@ -39,7 +39,6 @@ namespace BondleApplication.Areas.Admin.Controllers
             }
 
             var category = await _context.Category
-                .Include(c => c.ParentCategory)
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
             if (category == null)
             {
@@ -49,19 +48,15 @@ namespace BondleApplication.Areas.Admin.Controllers
             return View(category);
         }
 
-        // GET: Categories/Create
+
         public IActionResult Create()
         {
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID");
             return View();
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,Description,ParentCategoryID,IconUrl,SortOrder,IsActive")] Category category)
+        public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,Description,IconUrl,SortOrder,IsActive")] Category category)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +64,6 @@ namespace BondleApplication.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return View();
             }
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", category.ParentCategoryID);
             return View(category);
         }
 
@@ -86,16 +80,13 @@ namespace BondleApplication.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", category.ParentCategoryID);
             return View(category);
         }
 
-        // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("CategoryID,CategoryName,Description,ParentCategoryID,IconUrl,SortOrder,IsActive")] Category category)
+        public async Task<IActionResult> Edit(string id, [Bind("CategoryID,CategoryName,Description,IconUrl,SortOrder,IsActive")] Category category)
         {
             if (id != category.CategoryID)
             {
@@ -122,7 +113,6 @@ namespace BondleApplication.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ParentCategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", category.ParentCategoryID);
             return View(category);
         }
 
@@ -135,7 +125,6 @@ namespace BondleApplication.Areas.Admin.Controllers
             }
 
             var category = await _context.Category
-                .Include(c => c.ParentCategory)
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
             if (category == null)
             {

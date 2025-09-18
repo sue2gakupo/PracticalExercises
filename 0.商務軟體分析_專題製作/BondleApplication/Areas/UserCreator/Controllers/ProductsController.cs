@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BondleApplication.Access.Data;
+using BondleApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BondleApplication.Access.Data;
-using BondleApplication.Models;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BondleApplication.Areas.UserCreator.Controllers
 {
@@ -15,11 +16,13 @@ namespace BondleApplication.Areas.UserCreator.Controllers
     {
         private readonly BondleDBContext2 _context;
         private readonly IdGeneratorService _idGeneratorService;
+        private readonly IWebHostEnvironment _environment;
 
-        public ProductsController(BondleDBContext2 context, IdGeneratorService idGeneratorService)
+        public ProductsController(BondleDBContext2 context, IdGeneratorService idGeneratorService, IWebHostEnvironment environment)
         {
             _context = context;
             _idGeneratorService = idGeneratorService;
+            _environment = environment;
         }
 
         // GET: UserCreator/Products
@@ -69,21 +72,96 @@ namespace BondleApplication.Areas.UserCreator.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewBag.CategoryList = new SelectList(_context.Category
-                    .AsNoTracking(), "CategoryID", "CategoryName");
-              
-                 
+         
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryName"] = new SelectList(_context.Category, "CategoryName", "CategoryName", product.CategoryID);
+
+            ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID", product.CategoryID);
             ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID", product.CreatorID);
             ViewData["SeriesID"] = new SelectList(_context.ProductSeries, "SeriesID", "SeriesID", product.SeriesID);
 
             return View(product);
         }
+
+        public IActionResult CreateCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SelectCategory(Category category)
+        {
+            _context.Category.Add(category);
+            await _context.SaveChangesAsync();
+            return View();
+        }
+
+
+
+
+        public IActionResult Upload()
+        {
+            var product = new Product();
+            ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryID");
+            ViewData["CreatorID"] = new SelectList(_context.Creator, "CreatorID", "CreatorID");
+            ViewData["SeriesID"] = new SelectList(_context.ProductSeries, "SeriesID", "SeriesID");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(string variationId, IFormFile imageFile, string imageCaption, string id)
+        {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploadsPath = Path.Combine(_environment.WebRootPath, "ProductImagesFolder", variationId);
+                Directory.CreateDirectory(uploadsPath);
+
+                // 商生自訂格式的 ImageID
+                var lastImage = await _context.ProductImages
+                    .OrderByDescending(m => m.ImageID == id)
+                    .FirstOrDefaultAsync();
+
+                int nextNumber = 1;
+                if (lastImage != null && int.TryParse(lastImage.ImageID.Substring(2), out int lastNumber))
+                {
+                    nextNumber = lastNumber + 1;
+                }
+                string newImageID = $"IM{nextNumber.ToString("D6")}";
+
+
+                // 以 ImageID 作為檔名，副檔名保留原始格式
+                var fileExtension = Path.GetExtension(imageFile.FileName);
+                var fileName = $"{newImageID}{fileExtension}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+
+
+                var productImage = new ProductImages
+                {
+                    ImageID = lastImage, // 自增式函數
+                    ImageUrl = $"/ProductImagesFolder/{variationId}/{lastImage}",
+                    ImageCaption = imageCaption,
+                    FileSize = imageFile.Length,
+                    VariationID = variationId
+                };
+
+                _context.ProductImages.Add(productImage);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "圖片上傳成功" });
+            }
+
+            return Json(new { success = false, message = "請選擇要上傳的圖片" });
+        }
+
 
         // GET: UserCreator/Products/Edit/5
         public async Task<IActionResult> Edit(string id)

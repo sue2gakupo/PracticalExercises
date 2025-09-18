@@ -1,8 +1,48 @@
-﻿@{
+﻿@model IEnumerable<BondleApplication.Models.ViewModel.VisitorProductViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
+    string a = "";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+
+        @foreach (var item in Model)
+        {
+            a = item == Model.First() ? "active" : "";
+            <div class="carousel-item @a">
+                <img src="@Url.Content(item.ImageUrl)" class="d-block w-100" style="height:400px;object-fit:cover;"  alt="@item.ImageCaption" title="@item.ImageCaption">
+            </div>
+        }
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-xl-4 col-md-6">
+                <div class="card mb-4 " style="height: 420px">
+                    <img src="@Url.Content(item.ImageUrl)" class="card-img-top" style="height: 200px; object-fit: cover;"  alt="@item.ProductName">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">@item.ProductName</h5>
+                        <p class="card-text">$@item.Price</p>
+                        <a href="#" class="btn btn-primary mt-auto">加入購物車</a> 
+                        @* 待改連結或是Modal *@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

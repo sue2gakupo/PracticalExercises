@@ -50,9 +50,7 @@ public partial class BondleDBContext : DbContext
         {
             entity.Property(e => e.CategoryID).IsFixedLength();
             entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.ParentCategoryID).IsFixedLength();
 
-            entity.HasOne(d => d.ParentCategory).WithMany(p => p.InverseParentCategory).HasConstraintName("FK_Category_Parent");
         });
 
         modelBuilder.Entity<Creator>(entity =>
