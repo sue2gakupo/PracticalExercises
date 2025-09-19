@@ -67,22 +67,36 @@ namespace BondleApplication.Areas.Shared.Controllers
                 return View(member);
             }
 
-            // 2. 密碼雜湊（範例：SHA256，可依實際需求調整）
-            member.PasswordHash = ComputeSha256Hash(member.PasswordHash);
+            if (string.IsNullOrEmpty(member.Email) || string.IsNullOrEmpty(member.PasswordHash))
+            {
+                ViewData["Error"] = "請輸入完整資訊";
+                return View(member);
+            }
 
-            // 3. 設定預設值
+
+
+            // 建立新會員
             member.MemberID = Guid.NewGuid().ToString();
+            // 密碼雜湊（範例：SHA256，可依實際需求調整）
+            member.PasswordHash = ComputeSha256Hash(member.PasswordHash);
             member.IsEmailVerified = false;
-            member.CreateDate = DateTime.UtcNow;
+            member.CreateDate = DateTime.Now;
+            member.LastLoginDate = null;
             member.Status = 1;
 
-            if (ModelState.IsValid)
-            {
-                _context.Add(member);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(member);
+            _context.Add(member);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Login");
+
+
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(member);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //return View(member);
         }
 
         private static string ComputeSha256Hash(string rawData)

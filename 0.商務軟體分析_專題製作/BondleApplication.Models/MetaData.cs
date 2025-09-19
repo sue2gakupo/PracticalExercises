@@ -12,6 +12,9 @@ namespace BondleApplication.Models
         [StringLength(255)]
         [Display(Name = "E-Mail")]
         public string Email { get; set; } = null!;
+    
+    
+    
     }
 
     public partial class ShippingAddressData

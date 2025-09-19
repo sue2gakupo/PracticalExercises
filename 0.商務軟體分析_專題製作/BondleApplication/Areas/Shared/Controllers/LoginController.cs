@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 
 namespace BondleApplication.Areas.Shared.Controllers
@@ -21,6 +23,8 @@ namespace BondleApplication.Areas.Shared.Controllers
 
         public async Task<IActionResult> Index()
         {
+            string testHash = ComputeSha256Hash("12345");
+            ViewData["TestHash"] = testHash;
             return View();
         }
 
@@ -41,30 +45,36 @@ namespace BondleApplication.Areas.Shared.Controllers
             }
 
             // 查詢會員
-            var Member = await _context.Member
-                .FirstOrDefaultAsync(u => u.Email == member.Email && u.PasswordHash == ComputeSha256Hash(member.PasswordHash)); //12345
+            var existingMember = await _context.Member
+                    .FirstOrDefaultAsync(u => u.Email == member.Email && u.PasswordHash == ComputeSha256Hash(member.PasswordHash));
 
-            if (Member == null)
+            if (existingMember == null)
             {
-                ViewData["Error"] = "帳號或密碼錯誤，請重新輸入";
+                ViewData["Error"] = "帳號或密碼錯誤";
                 return View(member);
             }
 
-            // 判斷身分
-            var creator = await _context.Creator.FirstOrDefaultAsync(c => c.MemberID == member.MemberID);
-            var supporter = await _context.Supporter.FirstOrDefaultAsync(s => s.MemberID == member.MemberID);
+
+            // 查詢身分
+            var creator = await _context.Creator.FirstOrDefaultAsync(c => c.MemberID == existingMember.MemberID);
+            var supporter = await _context.Supporter.FirstOrDefaultAsync(s => s.MemberID == existingMember.MemberID);
 
 
-            if (creator != null)
+            // 登入
+            if (creator != null && supporter != null)
             {
-                // 創作者
-                await SignInUser(member, "Creator");
+                // 雙重身分，導向選擇頁（可自訂 SelectRole 頁面）
+                await SignInUser(existingMember, "DualRole");
+                return RedirectToAction("SelectRole");
+            }
+            else if (creator != null)
+            {
+                await SignInUser(existingMember, "Creator");
                 return RedirectToAction("Index", "Products", new { area = "UserCreator" });
             }
             else if (supporter != null)
             {
-                // 支持者
-                await SignInUser(member, "Supporter");
+                await SignInUser(existingMember, "Supporter");
                 return RedirectToAction("Index", "Products", new { area = "UserSupporter" });
             }
             else
@@ -75,7 +85,7 @@ namespace BondleApplication.Areas.Shared.Controllers
         }
 
 
-       
+
 
         private async Task SignInUser(Member user, string role)
         {
@@ -101,15 +111,49 @@ namespace BondleApplication.Areas.Shared.Controllers
             return RedirectToAction("Index", "Login");
         }
 
-        private string ComputeSha256Hash(string rawData)
+        private static string ComputeSha256Hash(string rawData)
         {
-            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            using (SHA256 sha256Hash = SHA256.Create())
             {
-                var bytes = System.Text.Encoding.UTF8.GetBytes(rawData);
-                var hashBytes = sha256.ComputeHash(bytes);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+                // 計算雜湊值
+                byte[] bytes = sha256Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
+
+                // 將 byte 陣列轉換成十六進位字串
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
+
+
+        // 選擇身分頁面（如有雙重身分）
+        [HttpGet]
+        public IActionResult SelectRole()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SelectRole(string role)
+        {
+            if (string.IsNullOrEmpty(role))
+                return RedirectToAction("Index");
+
+            if (role == "Creator")
+                return RedirectToAction("Index", "Products", new { area = "UserCreator" });
+            else if (role == "Supporter")
+                return RedirectToAction("Index", "Products", new { area = "UserSupporter" });
+
+            return RedirectToAction("Index");
+        }
+
+
+
+
 
         //[HttpGet]
         //public IActionResult SelectRole()

@@ -31,24 +31,6 @@ namespace BondleApplication.Areas.Admin.Controllers
         }
 
 
-        public async Task<IActionResult> Details(string id,string CAName)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.CategoryID == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-
         public IActionResult Create()
         {
             return View();
@@ -58,11 +40,29 @@ namespace BondleApplication.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,Description,IconUrl,SortOrder,IsActive")] Category category)
         {
+
             if (ModelState.IsValid)
             {
+                // 取得目前最大 CategoryID
+                var lastId = await _context.Category
+                    .OrderByDescending(c => c.CategoryID)
+                    .Select(c => c.CategoryID)
+                    .FirstOrDefaultAsync();
+
+                int nextNumber = 1;
+                if (!string.IsNullOrEmpty(lastId) && lastId.Length == 8 && lastId.StartsWith("CA"))
+                {
+                    if (int.TryParse(lastId.Substring(2), out int lastNumber))
+                    {
+                        nextNumber = lastNumber + 1;
+                    }
+                }
+
+                category.CategoryID = $"CA{nextNumber.ToString("D6")}";
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
-                return View();
+                return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
@@ -116,38 +116,7 @@ namespace BondleApplication.Areas.Admin.Controllers
             return View(category);
         }
 
-        // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.CategoryID == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-        // POST: Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var category = await _context.Category.FindAsync(id);
-            if (category != null)
-            {
-                _context.Category.Remove(category);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+       
 
         private bool CategoryExists(string id)
         {

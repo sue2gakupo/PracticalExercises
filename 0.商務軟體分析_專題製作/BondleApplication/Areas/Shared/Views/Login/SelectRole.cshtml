@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "選擇身分";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow" style="width: 22rem;">
+        <div class="card-body text-center">
+            <h4 class="card-title mb-4">本次登入身分</h4>
+            <form asp-action="SelectRole" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" name="role" value="Creator" class="btn btn-primary btn-block mb-3" style="width:100%;">創作者</button>
+                <button type="submit" name="role" value="Supporter" class="btn btn-success btn-block" style="width:100%;">支持者</button>
+            </form>
+        </div>
+    </div>
+</div>
