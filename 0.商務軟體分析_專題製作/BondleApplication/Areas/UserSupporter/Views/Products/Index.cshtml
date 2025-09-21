@@ -14,7 +14,9 @@
                 <img src="@item.ImageUrl" class="card-img-top" alt="@item.ProductName">
                 <div class="card-body">
                     <h5 class="card-title"> @Html.DisplayFor(modelItem => item.ProductName)</h5>
-                    <p class="card-text">$@Html.DisplayFor(modelItem => item.Price)</p>
+                    <p class="card-text">$@Html.DisplayFor(modelItem => item.Price, "{0:F0}")</p>     @*待修改 需要僅展示整數位，不含小數位 *@
+               
+
                     <a href="#" class="btn btn-primary">加入收藏</a>
                 </div>
             </div>

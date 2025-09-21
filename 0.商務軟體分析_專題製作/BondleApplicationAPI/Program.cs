@@ -1,5 +1,6 @@
 using BondleApplication.Access.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,15 @@ builder.Services.AddDbContext<BondleDBContext>(options =>
 
 builder.Services.AddDbContext<BondleDBContext2>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BondleDBConnection")));
+
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Shared/Login/Login";
+        options.LogoutPath = "/Shared/Login/Logout";
+        options.AccessDeniedPath = "/Shared/Login/Login";
+    });
 
 
 

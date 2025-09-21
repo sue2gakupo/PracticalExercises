@@ -87,16 +87,8 @@ namespace BondleApplication.Areas.Shared.Controllers
             _context.Add(member);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Login", new { area = "Shared" });
 
-
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(member);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(member);
         }
 
         private static string ComputeSha256Hash(string rawData)

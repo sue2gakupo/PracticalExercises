@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BondleApplication.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body>
     <header>
@@ -19,22 +20,41 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="UserCreator" asp-controller="Products" asp-action="Create">新增商品</a>
-                        </li>
+                        </li> *@
                         <form class="d-flex" role="search">
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                         </form>
 
+                        @* 註冊/登入/登出 *@
                         <li class="nav-item dropdown ms-auto">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">登入 | 註冊</a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item text-center" asp-area="Shared"asp-controller="Login"asp-action="Login">登入</a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-center" asp-area="Shared" asp-controller="Register" asp-action="Register">註冊</a></li>
-                            </ul>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    @User.Identity.Name "會員"
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <form asp-area="Shared" asp-controller="Login" asp-action="Logout" method="get" class="text-center m-0">
+                                            <button type="submit" class="dropdown-item">登出</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            }
+                            else
+                            {
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">登入 | 註冊</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item text-center" asp-area="Shared" asp-controller="Login" asp-action="Login">登入</a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-center" asp-area="Shared" asp-controller="Register" asp-action="Register">註冊</a>
+                                    </li>
+                                </ul>
+                            }
                         </li>
 
                     </ul>
@@ -55,7 +75,7 @@
                     &copy; 2025 - BondleApplication By Suuyii -
                     <a asp-area="" asp-controller="Home" asp-action="Privacy">隱私權政策</a>
                 </div>
-          
+
             </div>
         </div>
     </footer>

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 public class IdGeneratorService
 {
-    private readonly BondleDBContext _context;
+    private readonly BondleDBContext2 _context;
 
-    public IdGeneratorService(BondleDBContext context)
+    public IdGeneratorService(BondleDBContext2 context)
     {
         _context = context;
     }

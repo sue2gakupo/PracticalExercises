@@ -22,6 +22,8 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
     options.ViewLocationFormats.Add("/Views/Shared/Partials/{0}.cshtml");
 });
 
+
+
 // 這裡新增認證服務
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

@@ -1,28 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BondleApplication.Access.Data;
+using BondleApplication.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BondleApplication.Access.Data;
-using BondleApplication.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BondleApplication.Areas.Admin.Controllers
 {
     [Area("Admin")]
      
-
     public class CategoriesController : Controller
     {
         private readonly BondleDBContext2 _context;
+        private readonly IWebHostEnvironment _env;
 
-        public CategoriesController(BondleDBContext2 context)
+        public CategoriesController(BondleDBContext2 context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
-   
+
 
         public async Task<IActionResult> Index()
         {
@@ -38,33 +40,27 @@ namespace BondleApplication.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,Description,IconUrl,SortOrder,IsActive")] Category category)
+        public async Task<IActionResult> Create(
+        [Bind("CategoryName,Description,IsActive,SortOrder")] Category category)
         {
+            if (!ModelState.IsValid) return View(category);
 
-            if (ModelState.IsValid)
-            {
-                // 取得目前最大 CategoryID
-                var lastId = await _context.Category
-                    .OrderByDescending(c => c.CategoryID)
-                    .Select(c => c.CategoryID)
-                    .FirstOrDefaultAsync();
+            // 產生 CategoryID：CA000001 起跳
+            var lastId = await _context.Category
+                .OrderByDescending(c => c.CategoryID)
+                .Select(c => c.CategoryID)
+                .FirstOrDefaultAsync();
 
-                int nextNumber = 1;
-                if (!string.IsNullOrEmpty(lastId) && lastId.Length == 8 && lastId.StartsWith("CA"))
-                {
-                    if (int.TryParse(lastId.Substring(2), out int lastNumber))
-                    {
-                        nextNumber = lastNumber + 1;
-                    }
-                }
+            var next = 1;
+            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith("CA") &&
+                int.TryParse(lastId.Substring(2), out var n)) next = n + 1;
 
-                category.CategoryID = $"CA{nextNumber.ToString("D6")}";
+            category.CategoryID = $"CA{next:D6}";
 
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(category);
+            _context.Add(category);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Categories/Edit/5

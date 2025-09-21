@@ -70,7 +70,7 @@ namespace BondleApplication.Areas.Shared.Controllers
             else if (creator != null)
             {
                 await SignInUser(existingMember, "Creator");
-                return RedirectToAction("Index", "Products", new { area = "UserCreator" });
+                return RedirectToAction("Create", "Products", new { area = "UserCreator" });
             }
             else if (supporter != null)
             {
@@ -87,13 +87,13 @@ namespace BondleApplication.Areas.Shared.Controllers
 
 
 
-        private async Task SignInUser(Member user, string role)
+        private async Task SignInUser(Member member, string role)
         {
             var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.NameIdentifier, user.MemberID),
-        new Claim(ClaimTypes.Name, user.Name ?? ""),
-        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.NameIdentifier, member.MemberID),
+        new Claim(ClaimTypes.Name, member.Name ?? ""),
+        new Claim(ClaimTypes.Email, member.Email),
         new Claim(ClaimTypes.Role, role)
     };
 
@@ -108,7 +108,7 @@ namespace BondleApplication.Areas.Shared.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("Login", "Login");
         }
 
         private static string ComputeSha256Hash(string rawData)
@@ -144,71 +144,12 @@ namespace BondleApplication.Areas.Shared.Controllers
                 return RedirectToAction("Index");
 
             if (role == "Creator")
-                return RedirectToAction("Index", "Products", new { area = "UserCreator" });
+                return RedirectToAction("Create", "Products", new { area = "UserCreator" });
             else if (role == "Supporter")
                 return RedirectToAction("Index", "Products", new { area = "UserSupporter" });
 
             return RedirectToAction("Index");
         }
-
-
-
-
-
-        //[HttpGet]
-        //public IActionResult SelectRole()
-        //{
-        //    return View(); // 提供選擇 Creator 或 Supporter 的按鈕
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult SelectRole(string role)
-        //{
-        //    var memberID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    if (string.IsNullOrEmpty(memberID)) return RedirectToAction("Index");
-
-        //    if (role == "Creator")
-        //        return RedirectToAction("Index", "Dashboard", new { area = "Creator" });
-        //    else if (role == "Supporter")
-        //        return RedirectToAction("Index", "Products", new { area = "Supporter" });
-
-        //    return RedirectToAction("Index");
-        //}
-        //    // 建立 Claims
-        //    var claims = new List<Claim>
-        //        {
-        //            new Claim(ClaimTypes.NameIdentifier, Member.MemberID),
-        //            new Claim(ClaimTypes.Name, Member.Name),
-        //            new Claim(ClaimTypes.Email, Member.Email)
-        //        };
-
-        //        if (isCreator && !isSupporter)
-        //            claims.Add(new Claim(ClaimTypes.Role, "Creator"));
-        //        else if (!isCreator && isSupporter)
-        //            claims.Add(new Claim(ClaimTypes.Role, "Supporter"));
-        //        else if (isCreator && isSupporter)
-        //            claims.Add(new Claim("DualRole", "true")); // 雙重身分
-
-
-
-
-        //        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        //    var principal = new ClaimsPrincipal(identity);
-
-        //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-        //        // 導向不同頁面
-        //        if (isCreator && !isSupporter)
-        //            return RedirectToAction("Index", "Dashboard", new { area = "Creator" });
-        //        else if (!isCreator && isSupporter)
-        //            return RedirectToAction("Index", "Products", new { area = "Supporter" });
-        //        else
-        //return RedirectToAction("SelectRole"); // 雙重身分選擇
-
-        //    }
-
-
 
 
     }

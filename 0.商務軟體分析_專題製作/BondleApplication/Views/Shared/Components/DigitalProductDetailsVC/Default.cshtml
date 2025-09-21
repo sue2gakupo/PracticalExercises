@@ -1,0 +1,72 @@
+﻿@* Digital Default.cshtml *@
+@model BondleApplication.Models.ViewModel.ProductCreateVM
+<div class="row g-3">
+    <div class="col-md-4"><label class="form-label">檔案格式</label><input asp-for="FileFormat" class="form-control" /></div>
+    <div class="col-md-4"><label class="form-label">下載上限</label><input asp-for="DownloadLimit" class="form-control" /></div>
+    <div class="col-md-4"><label class="form-label">有效天數</label><input asp-for="ValidityDays" class="form-control" /></div>
+    <div class="col-12"><label class="form-label">授權說明</label><textarea asp-for="LicenseDescription" class="form-control"></textarea></div>
+    <div class="col-12">
+        <label class="form-label">數位檔案</label>
+        <input asp-for="FilePath" type="file" class="form-control" />
+    </div>
+</div>
+
+<hr />
+<h5>款式 Variations</h5>
+<div id="variationContainer">
+    @for (var i = 0; i < Model.Variations.Count; i++)
+    {
+        <div class="variation-block border rounded p-3 mb-3">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label">名稱</label>
+                    <input name="Variations[@i].VariationName" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">庫存</label>
+                    <input name="Variations[@i].Stock" type="number" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">價格差</label>
+                    <input name="Variations[@i].PriceDifference" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <label class="form-label">圖片</label>
+                    <input type="file" name="Variations[@i].ImageFile" class="form-control var-image" />
+                    <img class="mt-2 img-fluid d-none" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<button type="button" id="addVariation" class="btn btn-outline-secondary">+</button>
+
+<script>
+    const container=document.getElementById('variationContainer');
+    document.getElementById('addVariation')?.addEventListener('click', ()=>{
+      const idx=container.querySelectorAll('.variation-block').length;
+      container.insertAdjacentHTML('beforeend', `
+      <div class="variation-block border rounded p-3 mb-3">
+        <div class="row g-3">
+          <div class="col-md-5"><label class="form-label">名稱</label>
+            <input name="Variations[${idx}].VariationName" class="form-control" /></div>
+          <div class="col-md-3"><label class="form-label">庫存</label>
+            <input name="Variations[${idx}].Stock" type="number" class="form-control" /></div>
+          <div class="col-md-4"><label class="form-label">價格差</label>
+            <input name="Variations[${idx}].PriceDifference" class="form-control" /></div>
+          <div class="col-12">
+            <label class="form-label">圖片</label>
+            <input type="file" name="Variations[${idx}].ImageFile" class="form-control var-image" />
+            <img class="mt-2 img-fluid d-none" />
+          </div>
+        </div>
+      </div>`);
+    });
+    container.addEventListener('change', e=>{
+      if(!(e.target instanceof HTMLInputElement)) return;
+      if(!e.target.classList.contains('var-image')) return;
+      const f=e.target.files?.[0]; if(!f) return;
+      const img=e.target.parentElement.querySelector('img');
+      img.src=URL.createObjectURL(f); img.classList.remove('d-none');
+    });
+</script>
