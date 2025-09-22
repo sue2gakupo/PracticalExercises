@@ -37,8 +37,4 @@
     <Content Include="Areas\UserCreator\Views\Products\Index.cshtml" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\DigitalFile\" />
-  </ItemGroup>
-
 </Project>

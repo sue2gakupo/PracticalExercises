@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BondleApplication.Models", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BondleApplication.Access", "..\BondleApplication.Access\BondleApplication.Access.csproj", "{11E348C4-90C6-41B8-A68E-93A1E51D28C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BondleApplicationAPI", "..\BondleApplicationAPI\BondleApplicationAPI.csproj", "{DFAC2CBB-03BA-4BE6-A71E-C67177511FAB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{11E348C4-90C6-41B8-A68E-93A1E51D28C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E348C4-90C6-41B8-A68E-93A1E51D28C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E348C4-90C6-41B8-A68E-93A1E51D28C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DFAC2CBB-03BA-4BE6-A71E-C67177511FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFAC2CBB-03BA-4BE6-A71E-C67177511FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFAC2CBB-03BA-4BE6-A71E-C67177511FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFAC2CBB-03BA-4BE6-A71E-C67177511FAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
