@@ -6,6 +6,6 @@ namespace BondleApplication.ViewComponentParts;
 public class PhysicalProductDetailsVCViewComponents : ViewComponent
 {
    
-    public IViewComponentResult Invoke() => View(); // Views/Shared/Components/PhysicalProductDetailsVC/Default.cshtml
+    public IViewComponentResult Invoke() => View(new ProductCreateVM()); // Views/Shared/Components/PhysicalProductDetailsVC/Default.cshtml
 }
 
