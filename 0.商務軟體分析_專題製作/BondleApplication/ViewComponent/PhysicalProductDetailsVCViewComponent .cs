@@ -1,10 +1,11 @@
-﻿using BondleApplication.Models;
+﻿using BondleApplication.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BondleApplication.ViewComponentParts;
 
-public class PhysicalProductDetailsViewComponents : ViewComponent
+public class PhysicalProductDetailsVCViewComponents : ViewComponent
 {
+   
     public IViewComponentResult Invoke() => View(); // Views/Shared/Components/PhysicalProductDetailsVC/Default.cshtml
 }
 

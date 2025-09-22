@@ -13,6 +13,7 @@
     </div>
 
     <form asp-area="UserCreator" asp-controller="Products" asp-action="Create" method="post" enctype="multipart/form-data">
+        <input asp-for="CreatorID" type="hidden" />
         <div class="row">
             <!-- 主要商品資訊 -->
             <div class="col-md-8">

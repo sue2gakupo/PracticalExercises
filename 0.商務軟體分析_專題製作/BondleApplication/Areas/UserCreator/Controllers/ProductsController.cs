@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -30,6 +31,26 @@ namespace BondleApplication.Areas.UserCreator.Controllers
             _environment = environment;
         }
 
+        private void LoadCategories()
+        {
+            var categories = _context.Category
+                .OrderBy(c => c.SortOrder)
+                .Select(c => new { c.CategoryID, c.CategoryName })
+                .ToList();
+
+            ViewBag.Categories = new SelectList(categories, "CategoryID", "CategoryName");
+        }
+
+        private async Task<string?> GetCurrentCreatorIdAsync()
+        {
+            var memberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(memberId)) return null;
+
+            return await _context.Creator
+                .Where(c => c.MemberID == memberId)
+                .Select(c => c.CreatorID)
+                .FirstOrDefaultAsync();
+        }
 
 
         // GET: UserCreator/Products
@@ -59,13 +80,30 @@ namespace BondleApplication.Areas.UserCreator.Controllers
 
 
         [HttpGet]
-        public IActionResult Create() => View(new ProductCreateVM());
+        public async Task<IActionResult> Create()
+        {
+            LoadCategories();
+
+            var creatorId = await GetCurrentCreatorIdAsync();
+            if (string.IsNullOrEmpty(creatorId))
+            {
+                return RedirectToAction("Login", "Login", new { area = "Shared" });
+            }
+
+            var vm = new ProductCreateVM
+            {
+                ProductType = 1,
+                CreatorID = creatorId
+            };
+
+            return View(vm);
+        }
 
         [HttpGet]
         public IActionResult LoadDetails(int type)
         {
-            if (type == 1) return ViewComponent("PhysicalProductDetailsVC");
-            if (type == 2) return ViewComponent("DigitalProductDetailsVC");
+            if (type == 1) return ViewComponent("PhysicalProductDetailsViewComponents");
+            if (type == 2) return ViewComponent("DigitalProductDetailsViewComponents");
             return Content(string.Empty);
         }
 
@@ -74,14 +112,19 @@ namespace BondleApplication.Areas.UserCreator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateVM vm)
         {
-            if (!ModelState.IsValid) return View(vm);
+            LoadCategories();
 
-            // 分類清單（允許空值）
-            var categories = _context.Category
-                .OrderBy(c => c.SortOrder)
-                .Select(c => new { c.CategoryID, c.CategoryName })
-                .ToList();
-            ViewBag.Categories = new SelectList(categories, "CategoryID", "CategoryName");
+            var creatorId = await GetCurrentCreatorIdAsync();
+            if (string.IsNullOrEmpty(creatorId))
+            {
+                ModelState.AddModelError(string.Empty, "無法取得創作者資料，請重新登入。");
+            }
+            else
+            {
+                vm.CreatorID = creatorId;
+            }
+
+            if (!ModelState.IsValid) return View(vm);
 
             var now = DateTime.Now;
             // ProductID：Physical=PH******，Digital=DI******

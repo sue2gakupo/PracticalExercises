@@ -1,0 +1,131 @@
+﻿@model IEnumerable<BondleApplication.Models.Creator>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Biography)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AvatarUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoverUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VerificationStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountHolderName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ECPayMerchantID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ECPayStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlatformFeeRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplyDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VerificationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Biography)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AvatarUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoverUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VerificationStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountHolderName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ECPayMerchantID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ECPayStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlatformFeeRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplyDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VerificationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.MemberID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CreatorID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CreatorID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CreatorID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

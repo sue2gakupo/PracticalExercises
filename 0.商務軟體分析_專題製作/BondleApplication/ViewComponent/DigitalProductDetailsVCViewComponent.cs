@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BondleApplication.ViewComponentParts;
 
-public class DigitalProductDetailsViewComponents : ViewComponent
+public class DigitalProductDetailsVCViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
     {
